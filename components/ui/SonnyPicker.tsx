@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, FlatList, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
-import { SendvaPickerProps } from '@/interfaces/components/ui';
+import { SonnyPickerProps } from '@/interfaces/components/ui';
 
-const SendvaPicker: React.FC<SendvaPickerProps> = ({
+const SonnyPicker: React.FC<SonnyPickerProps> = ({
     label,
     placeholder,
     value,
@@ -192,4 +192,4 @@ const SendvaPicker: React.FC<SendvaPickerProps> = ({
     );
 };
 
-export default SendvaPicker;
+export default SonnyPicker;

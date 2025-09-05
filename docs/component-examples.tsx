@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import MainContainer from "@/components/common/MainContainer";
-import SendvaButton from "@/components/ui/SendvaButton";
-import SendvaInput from "@/components/ui/SendvaInput";
-import SendvaAuthSteps from "@/components/ui/SendvaAuthSteps";
-import { Text, View } from "react-native";
-import SendvaDocPicker from "@/components/ui/SendvaDocPicker";
-import SendvaPicker from "@/components/ui/SendvaPicker";
+import { View } from "react-native";
+import SonnyPicker from '@/components/ui/SonnyPicker';
+import { Text } from '@/components/common/Text';
+import SonnyInput from '@/components/ui/SonnyInput';
+import SonnyAuthSteps from '@/components/ui/SonnyAuthSteps';
+import SonnyButton from '@/components/ui/SonnyButton';
+import SonnyDocPicker from '@/components/ui/SonnyDocPicker';
 
 export default function Home() {
     const [firstName, setFirstName] = useState('');
@@ -44,20 +45,20 @@ export default function Home() {
                 Component Example
             </Text>
 
-            <SendvaAuthSteps
+            <SonnyAuthSteps
                 currentStep={4}
                 totalSteps={4}
                 label="Personal Information"
             />
 
-            <SendvaInput
+            <SonnyInput
                 label="First Name"
                 placeholder="Enter first name"
                 value={firstName}
                 onChangeText={setFirstName}
             />
 
-            <SendvaInput
+            <SonnyInput
                 label="Email Address"
                 placeholder="Enter email address"
                 value={email}
@@ -66,7 +67,7 @@ export default function Home() {
                 autoCapitalize="none"
             />
 
-            <SendvaInput
+            <SonnyInput
                 label="Password"
                 placeholder="Enter password"
                 value={password}
@@ -75,7 +76,7 @@ export default function Home() {
                 showPasswordToggle
             />
 
-            <SendvaPicker
+            <SonnyPicker
                 label="Mobile Money"
                 placeholder="Select mobile money provider"
                 value={mobileMoneyProvider}
@@ -83,7 +84,7 @@ export default function Home() {
                 items={mobileMoneyProviders}
             />
 
-            <SendvaDocPicker
+            <SonnyDocPicker
                 title="Upload Drivers License"
                 frontLabel="Upload Card Front"
                 backLabel="Upload Card Back"
@@ -94,7 +95,7 @@ export default function Home() {
                 supportedFormats="JPG, PNG, PDF"
             />
 
-            <SendvaDocPicker
+            <SonnyDocPicker
                 title="Upload Insurance Copy"
                 frontLabel="Upload Insurance"
                 onFrontPress={handleInsuranceUpload}
@@ -104,25 +105,25 @@ export default function Home() {
             />
 
             <View style={{ marginTop: 20, gap: 12 }}>
-                <SendvaButton
+                <SonnyButton
                     title="Continue"
                     onPress={() => console.log('Continue pressed')}
                 />
 
-                <SendvaButton
+                <SonnyButton
                     title="Cancel"
                     onPress={() => console.log('Cancel pressed')}
                     variant="outline"
                 />
 
-                <SendvaButton
+                <SonnyButton
                     title="Save & Continue"
                     onPress={() => console.log('Save pressed')}
                     iconName="save"
                     iconPosition="left"
                 />
 
-                <SendvaButton
+                <SonnyButton
                     title="Loading..."
                     onPress={() => { }}
                     loading={true}

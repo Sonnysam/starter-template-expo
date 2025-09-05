@@ -2,9 +2,9 @@ import React from 'react';
 import { TouchableOpacity, Text, ActivityIndicator, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
-import { SendvaButtonProps } from '@/interfaces/components/ui';
+import { SonnyButtonProps } from '@/interfaces/components/ui';
 
-const SendvaButton: React.FC<SendvaButtonProps> = ({
+const SonnyButton: React.FC<SonnyButtonProps> = ({
     title,
     onPress,
     variant = 'basic',
@@ -107,4 +107,4 @@ const SendvaButton: React.FC<SendvaButtonProps> = ({
     );
 };
 
-export default SendvaButton;
+export default SonnyButton;

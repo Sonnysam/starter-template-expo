@@ -1,7 +1,7 @@
 import { ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-export interface SendvaButtonProps {
+export interface SonnyButtonProps {
   title: string;
   onPress: () => void;
   variant?: 'basic' | 'outline' | 'custom';
@@ -13,7 +13,7 @@ export interface SendvaButtonProps {
   iconPosition?: 'left' | 'right';
 }
 
-export interface SendvaInputProps {
+export interface SonnyInputProps {
   label?: string;
   placeholder?: string;
   value: string;
@@ -32,7 +32,7 @@ export interface SendvaInputProps {
   errorStyle?: TextStyle;
 }
 
-export interface SendaAuthStepsProps {
+export interface SonnyAuthStepsProps {
   currentStep: number;
   totalSteps: number;
   label?: string;
@@ -43,7 +43,7 @@ export interface SendaAuthStepsProps {
   inactiveStepStyle?: ViewStyle;
 }
 
-export interface SendaDocPickerProps {
+export interface SonnyDocPickerProps {
   title: string;
   frontLabel: string;
   backLabel?: string;
@@ -61,7 +61,7 @@ export interface SendaDocPickerProps {
   iconStyle?: ViewStyle;
 }
 
-export interface SendvaPickerProps {
+export interface SonnyPickerProps {
   label: string;
   placeholder?: string;
   value: string;

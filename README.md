@@ -1,3 +1,17 @@
+# React Native Expo Starter Template
+
+A comprehensive React Native starter template built with Expo, featuring a modern tech stack, reusable UI components, and a well-structured codebase. This template provides everything you need to kickstart your mobile app development with TypeScript, state management, and a consistent design system.
+
+## Features
+
+- 🚀 **Expo Router** - File-based navigation system
+- 🎨 **Custom UI Components** - Pre-built, reusable components with consistent styling
+- 📱 **TypeScript** - Full type safety throughout the application
+- 🎯 **State Management** - Zustand for lightweight state management
+- 🎨 **NativeWind** - Tailwind CSS for React Native styling
+- 📚 **Documentation** - Comprehensive examples and usage guides
+- 🔧 **Development Ready** - Pre-configured with linting, formatting, and build tools
+
 ## Project Structure
 
 ```
@@ -10,11 +24,14 @@ driver-app/
 │   ├── common/           # Common components
 │   │   └── MainContainer.tsx
 │   └── ui/               # UI components
-│       ├── SendvaButton.tsx
-│       ├── SendvaInput.tsx
-│       ├── SendvaPicker.tsx
-│       ├── SendvaAuthSteps.tsx
-│       └── SendvaDocPicker.tsx
+│       ├── SonnyButton.tsx
+│       ├── SonnyInput.tsx
+│       ├── SonnyPicker.tsx
+│       ├── SonnyAuthSteps.tsx
+│       └── SonnyDocPicker.tsx
+├── config/               # Configuration files
+│   ├── firebase.ts       # Firebase configuration
+│   └── supabase.ts       # Supabase configuration
 ├── constants/            # App constants
 │   └── colors.ts         # Color palette
 ├── interfaces/           # TypeScript interfaces
@@ -22,6 +39,8 @@ driver-app/
 │   └── components/      # Component interfaces
 ├── store/               # State management
 │   └── auth.ts          # Auth store (Zustand)
+├── hooks/               # Custom React hooks
+├── services/            # API services and external integrations
 ├── types/               # Type definitions
 ├── utils/               # Utility functions
 ├── docs/                # Documentation & examples

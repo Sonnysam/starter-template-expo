@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
-import { SendaDocPickerProps } from '@/interfaces/components/ui';
+import { SonnyDocPickerProps } from '@/interfaces/components/ui';
 
-const SendaDocPicker: React.FC<SendaDocPickerProps> = ({
+const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
     title,
     frontLabel,
     backLabel,
@@ -128,4 +128,4 @@ const SendaDocPicker: React.FC<SendaDocPickerProps> = ({
     );
 };
 
-export default SendaDocPicker;
+export default SonnyDocPicker;

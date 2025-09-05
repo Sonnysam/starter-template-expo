@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ViewStyle, TextStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
-import { SendvaInputProps } from '@/interfaces/components/ui';
+import { SonnyInputProps } from '@/interfaces/components/ui';
 
-const SendvaInput: React.FC<SendvaInputProps> = ({
+const SonnyInput: React.FC<SonnyInputProps> = ({
     label,
     placeholder,
     value,
@@ -123,4 +123,4 @@ const SendvaInput: React.FC<SendvaInputProps> = ({
     );
 };
 
-export default SendvaInput;
+export default SonnyInput;

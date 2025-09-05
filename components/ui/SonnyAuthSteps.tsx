@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, ViewStyle, TextStyle } from 'react-native';
 import { Colors } from '@/constants/colors';
-import { SendaAuthStepsProps } from '@/interfaces/components/ui';
+import { SonnyAuthStepsProps } from '@/interfaces/components/ui';
 
-const SendaAuthSteps: React.FC<SendaAuthStepsProps> = ({
+const SonnyAuthSteps: React.FC<SonnyAuthStepsProps> = ({
     currentStep,
     totalSteps,
     label,
@@ -77,4 +77,4 @@ const SendaAuthSteps: React.FC<SendaAuthStepsProps> = ({
     );
 };
 
-export default SendaAuthSteps;
+export default SonnyAuthSteps;
