@@ -1,0 +1,50 @@
+{
+  "name": "starter-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "start": "expo start",
+    "prebuild": "expo prebuild",
+    "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
+    "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@react-navigation/native": "^7.0.3",
+    "expo": "^53.0.22",
+    "expo-constants": "~17.1.4",
+    "expo-linking": "~7.1.4",
+    "expo-router": "~5.1.5",
+    "expo-status-bar": "~2.2.3",
+    "expo-system-ui": "~5.0.11",
+    "expo-web-browser": "~14.2.0",
+    "nativewind": "latest",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.5",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-web": "^0.20.0",
+    "zustand": "^4.5.1",
+    "expo-splash-screen": "~0.30.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "~19.0.10",
+    "ajv": "^8.12.0",
+    "babel-plugin-module-resolver": "^5.0.2",
+    "eslint": "^9.25.1",
+    "eslint-config-expo": "^9.2.0",
+    "eslint-config-prettier": "^10.1.2",
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.11",
+    "tailwindcss": "^3.4.0",
+    "typescript": "~5.8.3"
+  },
+  "private": true
+}
