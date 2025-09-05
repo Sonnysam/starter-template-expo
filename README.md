@@ -15,7 +15,7 @@ A comprehensive React Native starter template built with Expo, featuring a moder
 ## Project Structure
 
 ```
-driver-app/
+starter-app/
 ├── app/                    # Expo Router pages
 │   ├── _layout.tsx        # Root layout
 │   ├── index.tsx          # Home page
