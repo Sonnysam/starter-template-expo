@@ -65,19 +65,20 @@ starter-app/
    npm install
    ```
 
-2. **Start development server**
+2. **Check if packages are Expo compatible and up to date**
 
    ```bash
-   npx expo start
+   npx expo install --check
    ```
 
-### ** or (clearing cache)**
+3. **Start development server**
 
-```bash
-npx expo start -c
+- `npx expo start`: Start Expo development server
+- `npx expo start -c`: Start Expo server with cache clean
+
 ```
 
-3. **View component examples**
+4. **View component examples**
    - Check `docs/component-examples.tsx` for usage examples
    - All UI components are documented with props and examples
 
@@ -94,3 +95,4 @@ npx expo start -c
 
 - **Component Examples** - See `docs/component-examples.tsx` for comprehensive usage examples of all UI components
 - **Font Usage** - See `docs/fonts.tsx` for typography and text component examples
+```
