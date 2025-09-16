@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainContainer from "@/components/common/MainContainer";
 import { View } from "react-native";
 import SonnyPicker from '@/components/ui/SonnyPicker';
@@ -7,6 +7,8 @@ import SonnyInput from '@/components/ui/SonnyInput';
 import SonnyAuthSteps from '@/components/ui/SonnyAuthSteps';
 import SonnyButton from '@/components/ui/SonnyButton';
 import SonnyDocPicker from '@/components/ui/SonnyDocPicker';
+import SonnyOtpInput from '@/components/ui/SonnyOtpInput';
+import { useSonnyToast, showSonnyToast } from '@/components/shared/SonnyToast';
 
 export default function Home() {
     const [firstName, setFirstName] = useState('');
@@ -16,6 +18,8 @@ export default function Home() {
     const [frontFile, setFrontFile] = useState<string | null>(null);
     const [backFile, setBackFile] = useState<string | null>(null);
     const [insuranceFile, setInsuranceFile] = useState<string | null>(null);
+    const [otpValue, setOtpValue] = useState('');
+    const { showToast, ToastComponent } = useSonnyToast();
 
     const mobileMoneyProviders = [
         'MTN Mobile Money',
@@ -38,6 +42,38 @@ export default function Home() {
         console.log('Insurance upload pressed');
         setInsuranceFile('insurance-document.pdf');
     };
+
+    const handleOtpComplete = () => {
+        if (otpValue.length === 6) {
+            showToast('OTP verification successful!', {
+                type: 'success',
+                title: 'Verification Complete',
+                showIcon: true
+            });
+        }
+    };
+
+    const showSuccessToast = () => {
+        showToast('Registration completed successfully!', {
+            type: 'success',
+            title: 'Success',
+            showIcon: true
+        });
+    };
+
+    const showErrorToast = () => {
+        showSonnyToast('Something went wrong. Please try again.', {
+            type: 'error',
+            title: 'Error',
+            showIcon: true
+        });
+    };
+
+    useEffect(() => {
+        if (otpValue.length === 6) {
+            handleOtpComplete();
+        }
+    }, [otpValue]);
 
     return (
         <MainContainer>
@@ -104,6 +140,13 @@ export default function Home() {
                 supportedFormats="PDF, JPG, PNG"
             />
 
+            <SonnyOtpInput
+                length={6}
+                value={otpValue}
+                onChangeText={setOtpValue}
+                error={otpValue.length > 0 && otpValue.length < 6 ? 'Please enter complete OTP' : ''}
+            />
+
             <View style={{ marginTop: 20, gap: 12 }}>
                 <SonnyButton
                     title="Continue"
@@ -128,7 +171,27 @@ export default function Home() {
                     onPress={() => { }}
                     loading={true}
                 />
+
+                <SonnyButton
+                    title="Show Success Toast (Hook)"
+                    onPress={showSuccessToast}
+                    variant="basic"
+                />
+
+                <SonnyButton
+                    title="Show Error Toast (Global)"
+                    onPress={showErrorToast}
+                    variant="outline"
+                />
+
+                <SonnyButton
+                    title="Verify OTP"
+                    onPress={handleOtpComplete}
+                    variant="custom"
+                />
             </View>
+
+            <ToastComponent />
         </MainContainer>
     );
 }

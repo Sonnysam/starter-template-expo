@@ -76,3 +76,14 @@ export interface SonnyPickerProps {
   itemStyle?: ViewStyle;
   selectedItemStyle?: ViewStyle;
 }
+
+export interface SonnyOtpInputProps {
+  length?: number;
+  value: string;
+  onChangeText: (value: string) => void;
+  style?: ViewStyle;
+  inputStyle?: ViewStyle;
+  textStyle?: TextStyle;
+  error?: string;
+  errorStyle?: TextStyle;
+}
