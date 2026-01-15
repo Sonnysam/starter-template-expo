@@ -6,6 +6,7 @@ A comprehensive React Native starter template built with Expo, featuring a moder
 
 - 🚀 **Expo Router** - File-based navigation system
 - 🎨 **Custom UI Components** - Pre-built, reusable components with consistent styling
+- 💎 **Expo UI / Liquid Glass** - Native tabs with liquid glass effect support (iOS 26+)
 - 📱 **TypeScript** - Full type safety throughout the application
 - 🎯 **State Management** - Zustand for lightweight state management
 - 🎨 **NativeWind** - Tailwind CSS for React Native styling
