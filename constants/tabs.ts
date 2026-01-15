@@ -16,6 +16,14 @@ export const TABS = [
         },
     },
     {
+        name: 'settings',
+        label: 'Settings',
+        icon: {
+            sf: 'gearshape.fill',
+            drawable: 'ic_settings',
+        },
+    },
+    {
         name: 'profile',
         label: 'Profile',
         icon: {
