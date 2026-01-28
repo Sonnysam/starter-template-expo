@@ -5,9 +5,9 @@ import { Text } from '@/components/common/Text'
 
 export default function Settings() {
   return (
-    <View>
+    <MainContainer>
       <Text>Settings</Text>
-    </View>
+    </MainContainer>
   )
 }
 

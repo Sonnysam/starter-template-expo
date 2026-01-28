@@ -1,18 +1,10 @@
 export const TABS = [
     {
-        name: 'index',
+        name: 'home',
         label: 'Home',
         icon: {
             sf: 'house.fill',
             drawable: 'ic_home',
-        },
-    },
-    {
-        name: 'history',
-        label: 'History',
-        icon: {
-            sf: 'square.stack.fill',
-            drawable: 'ic_layers',
         },
     },
     {
