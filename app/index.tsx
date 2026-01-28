@@ -7,7 +7,7 @@ const Page = () => {
   const [isSignedIn, setIsSignedIn] = useState(true);
 
   if (isSignedIn) {
-    return <Redirect href="/(dash)/(tabs)" />;
+    return <Redirect href="/(dash)/(tabs)/home" />;
   }
 
   return <GetStarted />;
