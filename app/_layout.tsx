@@ -28,6 +28,7 @@ export default function Layout() {
 
   return (
     <Stack
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         contentStyle: {
@@ -35,6 +36,7 @@ export default function Layout() {
         }
       }}
     >
+      <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="(auth)" options={{ headerShown: false }} />
       <Stack.Screen name="(dash)" options={{ headerShown: false, gestureEnabled: false }} />
     </Stack>
