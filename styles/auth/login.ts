@@ -1,0 +1,46 @@
+import { StyleSheet } from 'react-native';
+
+export const loginStyles = StyleSheet.create({
+  container: { flex: 1 },
+  header: { paddingHorizontal: 24, paddingTop: 12 },
+  titleSection: { paddingHorizontal: 24, marginTop: 32, marginBottom: 32 },
+  title: { fontSize: 28, fontWeight: '700', color: '#101828' },
+  subtitle: { fontSize: 16, color: '#6B7280', marginTop: 8 },
+  formSection: { paddingHorizontal: 24, gap: 16 },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 8,
+    marginBottom: 16,
+  },
+  rememberMeContainer: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: '#D1D5DC',
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: { backgroundColor: '#155DFC', borderColor: '#155DFC' },
+  rememberText: { fontSize: 14, color: '#4B5563' },
+  forgotText: { fontSize: 14, color: '#155DFC', fontWeight: '500' },
+  loginButton: {
+    backgroundColor: '#155DFC',
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: 'center',
+  },
+  loginButtonDisabled: { opacity: 0.7 },
+  loginButtonText: { color: '#FFF', fontSize: 16, fontWeight: '600' },
+  signUpRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  signUpText: { fontSize: 14, color: '#6B7280' },
+  signUpLink: { fontSize: 14, color: '#155DFC', fontWeight: '600' },
+});

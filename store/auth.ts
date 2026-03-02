@@ -1,61 +1,47 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { AuthState, AuthActions } from '@/interfaces/auth';
+import { AuthState, AuthActions, User } from '@/interfaces/auth';
+import { clearAllAuthData, getTokens, getUser } from '@/utils/storage';
 
-const initialState: AuthState = {
-  isAuthenticated: false,
-  isLoading: false,
-  error: null,
+const useAuthStore = create<AuthState & AuthActions>()((set) => ({
   user: null,
-};
+  isAuthenticated: false,
 
-export const useAuthStore = create<AuthState & AuthActions>()(
-  persist(
-    (set) => ({
-      ...initialState,
+  setAuth: async (user) => {
+    set({
+      user,
+      isAuthenticated: true,
+    });
+  },
 
-      setLoading: (loading: boolean) => set({ isLoading: loading }),
+  updateAvatar: (avatarUrl: string) => {
+    set((state) => ({
+      user: state.user ? { ...state.user, avatarUrl } : null,
+    }));
+  },
 
-      setError: (error: string | null) => set({ error }),
+  logout: async () => {
+    await clearAllAuthData();
+    set({
+      user: null,
+      isAuthenticated: false,
+    });
+  },
 
-      clearError: () => set({ error: null }),
+  hydrate: async () => {
+    try {
+      const { accessToken } = await getTokens();
+      const userData = await getUser();
 
-      login: (email: string, password: string) => {
-        console.log('Login called with:', { email, password });
+      if (accessToken && userData) {
         set({
+          user: userData as User,
           isAuthenticated: true,
-          user: {
-            id: '1',
-            email,
-            name: 'User',
-          },
         });
-      },
-
-      register: (name: string, email: string, password: string) => {
-        console.log('Register called with:', { name, email, password });
-        set({
-          isAuthenticated: true,
-          user: {
-            id: '1',
-            email,
-            name,
-          },
-        });
-      },
-
-      logout: () =>
-        set({
-          isAuthenticated: false,
-          user: null,
-        }),
-    }),
-    {
-      name: 'auth-storage',
-      partialize: (state) => ({
-        isAuthenticated: state.isAuthenticated,
-        user: state.user,
-      }),
+      }
+    } catch {
+      // Hydration failed — user stays as guest
     }
-  )
-);
+  },
+}));
+
+export default useAuthStore;

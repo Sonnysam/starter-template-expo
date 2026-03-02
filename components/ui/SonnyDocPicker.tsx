@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, ViewStyle, TextStyle } from 'react-native
 import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '@/constants/colors';
 import { SonnyDocPickerProps } from '@/interfaces/components/ui';
+import GlassCard from '@/components/common/GlassCard';
 
 const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
     title,
@@ -49,7 +50,6 @@ const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
     const getCardStyle = (): ViewStyle => {
         return {
             flex: singleMode ? 1 : 1,
-            backgroundColor: Colors.white,
             borderRadius: 12,
             borderWidth: 2,
             borderColor: Colors.lightGrey,
@@ -59,6 +59,7 @@ const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
             justifyContent: 'center',
             minHeight: 120,
             marginHorizontal: 4,
+            overflow: 'hidden' as const,
             ...cardStyle,
         };
     };
@@ -97,19 +98,23 @@ const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
         hasFile: boolean
     ) => (
         <TouchableOpacity
-            style={getCardStyle()}
             onPress={onPress}
             activeOpacity={0.7}
         >
-            <View style={getIconStyle()}>
-                <Ionicons
-                    name={hasFile ? 'checkmark-circle' : 'cloud-upload'}
-                    size={32}
-                    color={hasFile ? Colors.success : Colors.grey}
-                />
-            </View>
-            <Text style={getLabelStyle()}>{label}</Text>
-            <Text style={getHintStyle()}>{supportedFormats}</Text>
+            <GlassCard
+                style={getCardStyle()}
+                fallbackStyle={{ backgroundColor: Colors.white }}
+            >
+                <View style={getIconStyle()}>
+                    <Ionicons
+                        name={hasFile ? 'checkmark-circle' : 'cloud-upload'}
+                        size={32}
+                        color={hasFile ? Colors.success : Colors.grey}
+                    />
+                </View>
+                <Text style={getLabelStyle()}>{label}</Text>
+                <Text style={getHintStyle()}>{supportedFormats}</Text>
+            </GlassCard>
         </TouchableOpacity>
     );
 

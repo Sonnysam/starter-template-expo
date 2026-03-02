@@ -5,4 +5,6 @@ export interface MainContainerProps {
   children: ReactNode;
   style?: ViewStyle;
   contentContainerStyle?: ViewStyle;
+  scrollable?: boolean;
+  edges?: ('top' | 'bottom' | 'left' | 'right')[];
 }

@@ -1,18 +1,34 @@
 export const TABS = [
     {
         name: 'home',
-        label: 'Home',
+        label: 'Shop',
         icon: {
             sf: 'house.fill',
             drawable: 'ic_home',
         },
     },
     {
-        name: 'settings',
-        label: 'Settings',
+        name: 'food',
+        label: 'Food',
         icon: {
-            sf: 'gearshape.fill',
-            drawable: 'ic_settings',
+            sf: 'fork.knife',
+            drawable: 'ic_restaurant',
+        },
+    },
+    {
+        name: 'cart',
+        label: 'Cart',
+        icon: {
+            sf: 'cart.fill',
+            drawable: 'ic_cart',
+        },
+    },
+    {
+        name: 'messages',
+        label: 'Messages',
+        icon: {
+            sf: 'message.fill',
+            drawable: 'ic_chat',
         },
     },
     {

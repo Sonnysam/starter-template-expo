@@ -1,32 +1,45 @@
-import { Platform, ScrollView, StyleSheet, Text } from "react-native";
+import { Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { ReactNode } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "@/constants/colors";
+import { StatusBar } from "expo-status-bar";
 import { MainContainerProps } from "@/interfaces/constants/maincontainer-props";
-
+import { useTheme } from '@/constants/themeContext';
 
 const MainContainer: React.FC<MainContainerProps> = ({
     children,
     style,
-    contentContainerStyle
+    contentContainerStyle,
+    scrollable = true,
+    edges,
 }) => {
+    const { theme, mode } = useTheme();
+
     const renderSafeChildren = (children: ReactNode) => {
         if (typeof children === 'string') {
-            console.warn('MainContainer: String passed as child. Wrapping in Text component.');
             return <Text>{children}</Text>;
         }
         return children;
     };
 
     return (
-        <SafeAreaView style={[styles.container, style]}>
-            <ScrollView
-                contentContainerStyle={[styles.scrollContent, contentContainerStyle]}
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={false}
-            >
-                {renderSafeChildren(children)}
-            </ScrollView>
+        <SafeAreaView
+            style={[styles.container, { backgroundColor: theme.backgroundColor }, style]}
+            edges={edges}
+        >
+            <StatusBar style={mode === 'dark' ? 'light' : 'dark'} translucent />
+            {scrollable ? (
+                <ScrollView
+                    contentContainerStyle={[styles.scrollContent, contentContainerStyle]}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    {renderSafeChildren(children)}
+                </ScrollView>
+            ) : (
+                <View style={[styles.flexContent, contentContainerStyle]}>
+                    {renderSafeChildren(children)}
+                </View>
+            )}
         </SafeAreaView>
     );
 };
@@ -34,7 +47,6 @@ const MainContainer: React.FC<MainContainerProps> = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.white,
         paddingHorizontal: 10,
         paddingTop: Platform.OS === 'ios' ? 0 : 10,
     },
@@ -42,6 +54,9 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         paddingVertical: Platform.OS === 'ios' ? 0 : 20,
         paddingBottom: 50,
+    },
+    flexContent: {
+        flex: 1,
     },
 });
 

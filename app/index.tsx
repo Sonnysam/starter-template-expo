@@ -1,31 +1,31 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { View, ActivityIndicator } from "react-native";
-import GetStarted from "./(auth)/get-started";
+import { View, ActivityIndicator } from 'react-native';
+import { useTheme } from '@/constants/themeContext';
 
-const Page = () => {
-  const [isSignedIn, setIsSignedIn] = useState(true);
+const Index = () => {
   const router = useRouter();
+  const { theme } = useTheme();
 
   useEffect(() => {
-    if (isSignedIn) {
-      // Small timeout ensures the router is fully mounted on Android
-      const timeout = setTimeout(() => {
-        router.replace("/(dash)/(tabs)/home");
-      }, 100);
-      return () => clearTimeout(timeout);
-    }
-  }, [isSignedIn]);
+    const timeout = setTimeout(() => {
+      router.replace('/(protected)/(tabs)/home');
+    }, 100);
+    return () => clearTimeout(timeout);
+  }, []);
 
-  if (isSignedIn) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'white' }}>
-        <ActivityIndicator size="large" color="#5547BA" />
-      </View>
-    );
-  }
-
-  return <GetStarted />;
+  return (
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.backgroundColor,
+      }}
+    >
+      <ActivityIndicator size="large" color="#155DFC" />
+    </View>
+  );
 };
 
-export default Page;
+export default Index;

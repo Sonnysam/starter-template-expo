@@ -2,20 +2,21 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  avatarUrl?: string;
+  university?: string;
+  campus?: string;
+  phone?: string;
+  [key: string]: unknown;
 }
 
 export interface AuthState {
   isAuthenticated: boolean;
-  isLoading: boolean;
-  error: string | null;
   user: User | null;
 }
 
 export interface AuthActions {
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  clearError: () => void;
-  login: (email: string, password: string) => void;
-  register: (name: string, email: string, password: string) => void;
-  logout: () => void;
+  setAuth: (user: User) => Promise<void>;
+  updateAvatar: (avatarUrl: string) => void;
+  logout: () => Promise<void>;
+  hydrate: () => Promise<void>;
 }

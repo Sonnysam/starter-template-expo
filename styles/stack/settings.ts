@@ -1,0 +1,50 @@
+import { StyleSheet } from 'react-native';
+
+export const settingsStyles = StyleSheet.create({
+  container: { flex: 1 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+  },
+  headerTitle: { fontSize: 18, fontWeight: '600' },
+  scrollContent: { paddingHorizontal: 24 },
+  section: { marginBottom: 24 },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#6B7280',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 12,
+  },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  settingItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  iconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  settingTextContainer: { flex: 1, marginLeft: 14 },
+  settingTitle: { fontSize: 15, fontWeight: '500', color: '#101828' },
+  settingSubtitle: { fontSize: 13, color: '#9CA3AF', marginTop: 2 },
+  separator: { height: 1, backgroundColor: '#F3F4F6', marginLeft: 66 },
+});

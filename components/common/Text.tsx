@@ -14,13 +14,14 @@ export const Text: React.FC<CustomTextProps> = ({
     children,
     ...props
 }) => {
-    const getFontFamily = (weight: string) => {
-        switch (weight) {
+    const getFontFamily = (w: string) => {
+        switch (w) {
             case 'medium':
                 return fonts.medium;
             case 'semiBold':
+                return 'Poppins-SemiBold';
             case 'bold':
-                return fonts.medium;
+                return fonts.bold;
             case 'regular':
             default:
                 return fonts.regular;

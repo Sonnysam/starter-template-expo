@@ -1,16 +1,24 @@
 import '../global.css';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-
-
-
+import { QueryClientProvider } from '@tanstack/react-query';
+import queryClient from '@/config/queryClient';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Stack } from 'expo-router';
-import { ActivityIndicator } from 'react-native';
-import { useEffect } from 'react';
-import { Colors } from '@/constants/colors';
+import { ActivityIndicator, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import { ThemeProvider } from '@/constants/themeContext';
+import useAuthStore from '@/store/auth';
+import {
+  SafeAreaProvider,
+} from "react-native-safe-area-context";
+
 SplashScreen.preventAutoHideAsync();
 
-export default function Layout() {
+export default function RootLayout() {
+  const hydrate = useAuthStore((state) => state.hydrate);
+  const [isReady, setIsReady] = useState(false);
+
   const [fontsLoaded] = useFonts({
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
     'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
@@ -19,26 +27,36 @@ export default function Layout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+    const prepare = async () => {
+      await hydrate();
+      setIsReady(true);
+    };
+    prepare();
+  }, []);
 
-  if (!fontsLoaded) return <ActivityIndicator size={"small"} />
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded && isReady) {
+      requestAnimationFrame(async () => {
+        await SplashScreen.hideAsync();
+      });
+    }
+  }, [fontsLoaded, isReady]);
+
+  if (!fontsLoaded || !isReady) {
+    return null;
+  }
 
   return (
-    <Stack
-      initialRouteName="index"
-      screenOptions={{
-        headerShown: false,
-        contentStyle: {
-          backgroundColor: Colors.white
-        }
-      }}
-    >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(dash)" options={{ headerShown: false, gestureEnabled: false }} />
-    </Stack>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <SafeAreaProvider>
+            <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+              <Stack screenOptions={{ headerShown: false }} />
+            </View>
+          </SafeAreaProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }
