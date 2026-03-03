@@ -1,0 +1,426 @@
+---
+description: React Native Expo core - data fetching, mutations, API layer, 401 handling, forms, network, accessibility, Expo Router, EAS, platform extensions
+alwaysApply: true
+---
+
+# React Native Expo Core Practices
+
+Domain-specific guidelines for building React Native Expo apps.
+
+## Companion Skills (Use Together)
+
+Apply these rules **in addition to** the following Remote Rules. Add both as GitHub Remote Rules in Cursor Settings (Rules → Add Rule → Remote Rule):
+
+| Rule | URL | Use For |
+|------|-----|---------|
+| **expo/skills** | `https://github.com/expo/skills.git` | Expo Router, UI, data-fetching, EAS deployment, app design |
+| **callstackincubator/agent-skills** | `https://github.com/callstackincubator/agent-skills.git` | React Native performance, profiling, FPS, bundle size, FlashList |
+| **fontezbrooks/react-native-testing** | `https://github.com/fontezbrooks/react-native-testing.git` | RNTL, Jest, Maestro, component tests, coverage |
+| **vercel-labs/agent-skills** | `https://github.com/vercel-labs/agent-skills.git` | React best practices, memoization, re-renders |
+
+Cursor auto-discovers them when questions match their descriptions.
+
+## When to Apply
+
+Use these guidelines when:
+- Building or modifying Expo apps (data fetching, UI, navigation, API integration)
+- Setting up forms, validation, or backend consumption
+- Debugging performance, security, or offline behavior
+- Deploying with EAS or configuring platform-specific code
+
+## Problem → Section Mapping
+
+| Problem | See Section |
+|---------|-------------|
+| Slow API, loading states, cache | 1. Data Fetching & Caching |
+| Backend integration, NestJS, auth | 2. API Layer |
+| Which Expo package to use | 3. Prefer Expo SDKs |
+| Tokens, PII, secrets | 4. Storage & Security |
+| Effect bugs, infinite loops | 5. useEffect |
+| List jank, scroll lag | 6. Memoization & Lists |
+| Form validation, schemas | 11. Forms |
+| Offline banner, connectivity | 12. Offline & Network |
+| Screen reader, a11y | 13. Accessibility |
+| Routing, layouts, params | 14. Expo Router |
+| App Store / Play Store | 15. EAS Build |
+| Large bundle, tree shaking | 10. Project Conventions (barrel imports) |
+
+---
+
+## 1. Data Fetching & Caching [CRITICAL]
+
+Use **TanStack Query (React Query)** instead of raw `useEffect` + `fetch`:
+
+```typescript
+import { useQuery, useMutation, QueryClient } from '@tanstack/react-query';
+
+const { data, isLoading, error, refetch } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+  staleTime: 5 * 60 * 1000,
+});
+```
+
+**Persistence for non-sensitive cache:**
+
+```typescript
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const asyncStoragePersister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+  throttleTime: 1000,
+});
+// Wrap app with PersistQueryClientProvider + persistOptions
+```
+
+**Prefetching** – Populate cache before data is needed:
+
+```typescript
+// In event handlers (e.g. onPress before navigation)
+queryClient.prefetchQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+  staleTime: 60000,
+});
+
+// In parent components to avoid request waterfalls
+useEffect(() => {
+  queryClient.prefetchQuery({
+    queryKey: ['article-comments', id],
+    queryFn: getArticleCommentsById,
+  });
+}, [queryClient, id]);
+
+// With Expo Router: prefetch in layout or before navigation to next screen
+```
+
+- Prefetch never throws; use `fetchQuery` if you need to catch errors
+- Set `staleTime` explicitly for prefetch to control when refetch happens
+- Prefetch in `queryFn` when dependent data (e.g. comments after article) is likely needed
+
+**Mutations** – Use `useMutation` with cache invalidation:
+
+```typescript
+const mutation = useMutation({
+  mutationFn: updateProfile,
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user'] }),
+  onError: (err) => toast.error(err.message),
+});
+// Optimistic: onMutate → setQueryData, onError → rollback
+```
+
+**Common pitfalls:** Raw `useEffect` + fetch; missing `invalidateQueries` on mutation success; no `staleTime` causing excess refetches.
+
+---
+
+## 2. API Layer & Backend Integration [HIGH]
+
+Keep the API layer **modular and separate** from UI. Structure for external backends (e.g. NestJS, Supabase):
+
+```
+services/
+  api/
+    client.ts      # Base HTTP client, auth headers, interceptors
+    endpoints.ts   # Centralized endpoint constants
+  user.service.ts  # User-related API calls
+  auth.service.ts  # Auth-related API calls
+```
+
+**Base client** – Single place for base URL, auth, error handling:
+
+```typescript
+// services/api/client.ts
+import * as SecureStore from 'expo-secure-store';
+
+const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+
+/** Base fetch wrapper with auth and error handling */
+export async function apiClient<T>(
+  path: string,
+  options?: RequestInit
+): Promise<T> {
+  const token = await SecureStore.getItemAsync('token');
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(token && { Authorization: `Bearer ${token}` }),
+      ...options?.headers,
+    },
+  });
+  if (!res.ok) {
+    if (res.status === 401) {
+      await refreshTokenOrLogout();
+    }
+    throw new Error(`API ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+```
+
+**401 / token refresh** – On 401, refresh token via auth service or clear storage and redirect to login. Centralize this in the client.
+
+**Service modules** – One file per domain, typed responses:
+
+```typescript
+// services/user.service.ts
+import { apiClient } from '@/services/api/client';
+
+/** Fetches user by ID. Used by useUser and prefetch. */
+export async function fetchUser(id: string) {
+  return apiClient<User>(`/users/${id}`);
+}
+```
+
+**Documentation** – Brief JSDoc on public service functions and API client helpers. No inline comments for obvious code.
+
+---
+
+## 3. Prefer Expo SDKs
+
+Use **Expo SDK packages** over third-party alternatives. Install via: `npx expo install <package>`
+
+| Need | Use Expo | Avoid |
+|------|----------|-------|
+| Images | `expo-image` | `Image` from react-native |
+| Secure storage | `expo-secure-store` | AsyncStorage for secrets |
+| Env/config | `expo-constants` | Hardcoded config |
+| Biometrics | `expo-local-authentication` | Third-party auth libs |
+| Linking/URLs | `expo-linking` | react-native Linking |
+| File system | `expo-file-system` | react-native-fs |
+| Updates | `expo-updates` | Custom OTA logic |
+| Splash | `expo-splash-screen` | Custom splash |
+| Fonts | `expo-font` | Manual font linking, third-party font libs |
+| Network status | `expo-network` | Custom polling, manual fetch checks |
+
+Expo SDKs are maintained with the Expo release cycle and work in Expo Go / dev builds.
+
+---
+
+## 4. Storage & Security [CRITICAL]
+
+**Sensitive data** (tokens, credentials, PII, biometric keys): Use **expo-secure-store** only. Never AsyncStorage.
+
+```bash
+npx expo install expo-secure-store
+```
+
+**Non-sensitive data** (app state, cache): AsyncStorage is fine.
+
+**Never hardcode** API keys, secrets, or credentials. Use environment variables (Expo Constants + `app.config.js` or EAS Secrets). Use BFF pattern for operations requiring server-side secrets.
+
+**Logging:** Never log passwords, tokens, account numbers, card numbers, SSN, or PII. Sanitize error messages before logging.
+
+**Network:** HTTPS only. Validate certificates; consider certificate pinning for high-risk flows.
+
+**Common pitfalls:** AsyncStorage for tokens; hardcoded API keys; logging PII in errors.
+
+---
+
+## 5. useEffect Best Practices
+
+1. **Dependency array** – Include all variables used inside. Use `eslint-plugin-react-hooks`.
+2. **One concern per effect** – Keep effects focused.
+3. **Always cleanup** – Return cleanup for subscriptions, timers, listeners:
+
+```typescript
+useEffect(() => {
+  const sub = api.subscribe(handleUpdate);
+  return () => sub.unsubscribe();
+}, []);
+```
+
+4. **Avoid overuse** – Prefer derived state over `useEffect`:
+
+```typescript
+// ❌ BAD
+useEffect(() => setFullName(`${first} ${last}`), [first, last]);
+
+// ✅ GOOD
+const fullName = `${first} ${last}`;
+```
+
+5. **No infinite loops** – Avoid updating state in dependency array without a guard.
+6. **Extract custom hooks** – Move repeated effect logic into `useX` hooks.
+
+**Common pitfalls:** Missing dependency array; no cleanup for subscriptions/timers; using effect for derived state; infinite loop from state in deps.
+
+---
+
+## 6. Memoization & Lists [CRITICAL]
+
+- **useMemo** – Expensive computations or when referential equality matters.
+- **useCallback** – Callbacks passed to memoized children or in dependency arrays.
+- **React.memo** – Pure components that re-render often with same props.
+- **Lists** – Use virtualized lists, not `ScrollView` + `map`:
+
+| Items | Use | Avoid |
+|-------|-----|-------|
+| < 20 static | ScrollView OK | — |
+| 20–100 | FlatList | ScrollView + map |
+| > 100 | FlashList (`@shopify/flash-list`) | FlatList, ScrollView |
+
+**Quick pattern:**
+```typescript
+// ❌ BAD
+<ScrollView>{items.map((i) => <Item key={i.id} {...i} />)}</ScrollView>
+
+// ✅ GOOD
+<FlashList data={items} renderItem={({ item }) => <Item {...item} />} estimatedItemSize={50} keyExtractor={(i) => i.id} />
+```
+
+**Common pitfalls:** Inline `renderItem` causes re-renders; use `useCallback` or define outside. FlashList requires `estimatedItemSize`.
+
+---
+
+## 7. Error Handling & Validation
+
+- **Validate client and server** – Client for UX, server for security.
+- **Error boundaries** – Wrap major sections.
+- **User-facing errors** – Generic messages (e.g. "Something went wrong."). Never expose stack traces.
+- **Async errors** – Use `try/catch` and proper error types.
+
+---
+
+## 8. Currency & Monetary Amounts
+
+**Never use float/double for money** – Floats cause rounding errors.
+
+- Store as **integers in smallest unit** (cents): `amountCents: 12345` = $123.45
+- Or use **decimal.js** / **big.js** for calculations
+
+```typescript
+// ❌ BAD
+const total = 19.99 + 4.99;
+
+// ✅ GOOD
+const totalCents = 1999 + 499;
+const displayAmount = (totalCents / 100).toFixed(2);
+```
+
+---
+
+## 9. UI Patterns for Sensitive Data
+
+**Masking** – Mask account numbers, card numbers (e.g. ****1234). Show only last 4 digits when possible.
+
+**Session & Auth** – Session timeout / auto-logout. Use biometric auth (`expo-local-authentication`) where appropriate. Clear secure storage on logout.
+
+**Loading states** – Use Query’s `isLoading`, `isFetching`, `isPending`. Show skeletons instead of blank screens. Use `placeholderData` or `keepPreviousData` to avoid flashing stale content.
+
+---
+
+## 10. Project Conventions
+
+**Path alias** – Use `@/` for imports: `@/components/Button`, `@/services/api/client`, `@/constants/colors`. Configure in `tsconfig.json` and `babel.config.js` (babel-plugin-module-resolver).
+
+**Barrel imports** – Avoid `index.ts` re-exports that pull in unused code. Import directly from source for tree shaking: `import { Button } from '@/components/ui/Button'` not `import { Button } from '@/components'`.
+
+**Platform extensions** – Use `.ios.tsx`, `.android.tsx`, or `.native.ts` for platform-specific code. Expo picks the right file at build time.
+
+```text
+components/
+  KeyboardAvoidingView.ios.tsx
+  KeyboardAvoidingView.android.tsx
+```
+
+---
+
+## 11. Forms & Validation
+
+Use **react-hook-form** + **zod** for form state and validation:
+
+```typescript
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const schema = z.object({ email: z.string().email(), password: z.string().min(8) });
+
+const { control, handleSubmit } = useForm({
+  resolver: zodResolver(schema),
+  defaultValues: { email: '', password: '' },
+});
+```
+
+- Zod schemas double as TypeScript types. Share validation with backend where possible.
+
+---
+
+## 12. Offline & Network
+
+Use **expo-network** for connectivity:
+
+```typescript
+import * as Network from 'expo-network';
+
+// In component – hook listens for changes
+const { isConnected, isInternetReachable } = Network.useNetworkState();
+
+// Or one-off
+const { isConnected, isInternetReachable } = await Network.getNetworkStateAsync();
+```
+
+- React Query retries on failure; use network status for banners ("You're offline") or to disable actions.
+- `expo-network` provides `type`, `isConnected`, `isInternetReachable`.
+
+---
+
+## 13. Accessibility
+
+Add `accessibilityLabel`, `accessibilityRole`, `accessible` to interactive elements:
+
+```typescript
+<TouchableOpacity
+  accessibilityRole="button"
+  accessibilityLabel="Submit form"
+  accessibilityHint="Double tap to submit"
+>
+```
+
+- Test with TalkBack (Android) and VoiceOver (iOS).
+- Ensure sufficient color contrast and logical focus order.
+
+---
+
+## 14. Expo Router
+
+**File-based routing** – `app/` directory; files map to routes. Use `(groups)` for layout without affecting URL: `(auth)/login.tsx`, `(dash)/(tabs)/home.tsx`.
+
+**Layouts** – `_layout.tsx` wraps children. Nest for tab + stack combos.
+
+**Native Tabs (SDK 55+)** – Use `expo-router/unstable-native-tabs` for platform-native tab bars on iOS and Android. Use `NativeTabs.Trigger.Icon` (sf/md props) and `NativeTabs.Trigger.Label`. Fall back to `Tabs` from `expo-router` on web. Tab config in `constants/tabs.ts` with `sf` (SF Symbols) and `md` (Material symbols).
+
+**Dynamic routes** – `[id].tsx` for `/:id`. Use `useLocalSearchParams()` for params.
+
+---
+
+## 15. EAS Build & Submit
+
+**Quick commands:**
+```bash
+eas build --platform all     # or ios / android
+eas submit --latest         # Submit last build to stores
+eas update --environment preview   # OTA JS bundle (SDK 55+ requires --environment)
+eas credentials             # Manage signing (use sparingly)
+```
+
+- Configure profiles in `eas.json`. Use `expo-updates` in app for OTA.
+- Keep credentials in EAS; avoid local key management when possible.
+
+---
+
+## References
+
+- [expo/skills](https://github.com/expo/skills) – Official Expo AI agent skills
+- [callstackincubator/agent-skills](https://github.com/callstackincubator/agent-skills) – React Native optimization
+- [React useEffect best practices – DEV Community](https://dev.to/hkp22/reacts-useeffect-best-practices-pitfalls-and-modern-javascript-insights-g2f)
+- [useEffect pitfalls – newline](https://www.newline.co/@RichardBray/useeffect-in-react-best-practices-and-common-pitfalls--52b2d5d7)
+- [TanStack Prefetching](https://tanstack.com/query/latest/docs/framework/react/guides/prefetching)
+- [TanStack createAsyncStoragePersister](https://tanstack.com/query/v5/docs/react/plugins/createAsyncStoragePersister)
+- [Expo SDK Reference](https://docs.expo.dev/versions/latest/)
+- [Expo Router](https://docs.expo.dev/router/introduction/)
+- [EAS Build](https://docs.expo.dev/build/introduction/)
+- [expo-network](https://docs.expo.dev/versions/latest/sdk/network/)

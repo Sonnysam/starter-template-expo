@@ -4,7 +4,7 @@ export const TABS = [
         label: 'Home',
         icon: {
             sf: 'house.fill',
-            drawable: 'ic_home',
+            md: 'home',
         },
     },
     {
@@ -12,7 +12,7 @@ export const TABS = [
         label: 'Settings',
         icon: {
             sf: 'gearshape.fill',
-            drawable: 'ic_settings',
+            md: 'settings',
         },
     },
     {
@@ -20,7 +20,7 @@ export const TABS = [
         label: 'Profile',
         icon: {
             sf: 'person.fill',
-            drawable: 'ic_person',
+            md: 'person',
         },
     },
 ] as const;

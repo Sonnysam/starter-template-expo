@@ -1,20 +1,17 @@
 import '../global.css';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
-
-
-
 import { Stack } from 'expo-router';
-import { ActivityIndicator } from 'react-native';
 import { useEffect } from 'react';
 import { Colors } from '@/constants/colors';
+
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
     'Poppins-Bold': require('../assets/fonts/Poppins-Bold.ttf'),
     'Poppins-Medium': require('../assets/fonts/Poppins-Medium.ttf'),
-    'Poppins': require('../assets/fonts/Poppins-Regular.ttf'),
+    Poppins: require('../assets/fonts/Poppins-Regular.ttf'),
     'Poppins-SemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
   });
 
@@ -24,21 +21,22 @@ export default function Layout() {
     }
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return <ActivityIndicator size={"small"} />
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
     <Stack
-      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         contentStyle: {
-          backgroundColor: Colors.white
-        }
+          backgroundColor: Colors.white,
+        },
       }}
     >
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-      <Stack.Screen name="(dash)" options={{ headerShown: false, gestureEnabled: false }} />
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(auth)" />
+      <Stack.Screen name="(dash)" options={{ gestureEnabled: false }} />
     </Stack>
   );
 }
