@@ -1,5 +1,6 @@
-import { ViewStyle, TextStyle } from 'react-native';
+import { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import type { ImagePickerOptions } from 'expo-image-picker';
 
 export interface SonnyButtonProps {
   title: string;
@@ -22,13 +23,12 @@ export interface SonnyInputProps {
   showPasswordToggle?: boolean;
   error?: string;
   disabled?: boolean;
-  multiline?: boolean;
-  numberOfLines?: number;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad';
   autoCapitalize?: 'none' | 'sentences' | 'words' | 'characters';
   style?: ViewStyle;
-  inputStyle?: TextStyle;
   labelStyle?: TextStyle;
+  inputWrapStyle?: ViewStyle;
+  inputStyle?: TextStyle;
   errorStyle?: TextStyle;
 }
 
@@ -38,6 +38,7 @@ export interface SonnyAuthStepsProps {
   label?: string;
   style?: ViewStyle;
   labelStyle?: TextStyle;
+  stepsStyle?: ViewStyle;
   stepStyle?: ViewStyle;
   activeStepStyle?: ViewStyle;
   inactiveStepStyle?: ViewStyle;
@@ -55,14 +56,14 @@ export interface SonnyDocPickerProps {
   singleMode?: boolean;
   style?: ViewStyle;
   titleStyle?: TextStyle;
+  rowStyle?: ViewStyle;
   cardStyle?: ViewStyle;
-  labelStyle?: TextStyle;
-  hintStyle?: TextStyle;
-  iconStyle?: ViewStyle;
+  cardLabelStyle?: TextStyle;
+  cardHintStyle?: TextStyle;
 }
 
 export interface SonnyPickerProps {
-  label: string;
+  label?: string;
   placeholder?: string;
   value: string;
   onValueChange: (value: string) => void;
@@ -70,10 +71,14 @@ export interface SonnyPickerProps {
   error?: string;
   disabled?: boolean;
   style?: ViewStyle;
-  containerStyle?: ViewStyle;
   labelStyle?: TextStyle;
+  pickerWrapStyle?: ViewStyle;
+  pickerTextStyle?: TextStyle;
   errorStyle?: TextStyle;
+  overlayStyle?: ViewStyle;
+  sheetStyle?: ViewStyle;
   itemStyle?: ViewStyle;
+  itemTextStyle?: TextStyle;
   selectedItemStyle?: ViewStyle;
 }
 
@@ -81,9 +86,23 @@ export interface SonnyOtpInputProps {
   length?: number;
   value: string;
   onChangeText: (value: string) => void;
+  error?: string;
+  circular?: boolean;
   style?: ViewStyle;
   inputStyle?: ViewStyle;
-  textStyle?: TextStyle;
-  error?: string;
   errorStyle?: TextStyle;
+}
+
+export interface SonnyImagePickerProps {
+  imageUri?: string | null;
+  onPick: (uri: string) => void;
+  onError?: (error: string) => void;
+  label?: string;
+  placeholder?: string;
+  pickerOptions?: Partial<ImagePickerOptions>;
+  style?: ViewStyle;
+  labelStyle?: TextStyle;
+  buttonStyle?: ViewStyle;
+  buttonTextStyle?: TextStyle;
+  imageStyle?: ImageStyle;
 }

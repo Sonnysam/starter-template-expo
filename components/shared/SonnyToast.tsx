@@ -3,6 +3,7 @@ import { Animated, StyleSheet, View } from 'react-native'
 import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react'
 import { Text } from '../common/Text';
 import { Colors } from '@/constants/colors';
+import { FontSizes, LineHeights } from '@/constants/typography';
 import { Ionicons } from '@expo/vector-icons';
 import { SonnyToastProps, SonnyToastRef } from '@/interfaces/components/toast';
 
@@ -261,14 +262,14 @@ const styles = StyleSheet.create({
     },
     title: {
         color: Colors.success,
-        fontSize: 16,
+        fontSize: FontSizes.body,
         fontWeight: 'bold',
         marginBottom: 4,
     },
     description: {
         color: Colors.grey,
-        fontSize: 12,
-        lineHeight: 16,
+        fontSize: FontSizes.caption,
+        lineHeight: FontSizes.caption * LineHeights.normal,
     },
 });
 

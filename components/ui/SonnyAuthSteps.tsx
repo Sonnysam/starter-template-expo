@@ -1,80 +1,88 @@
 import React from 'react';
-import { View, Text, ViewStyle, TextStyle } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import { Text } from '@/components/common/Text';
 import { Colors } from '@/constants/colors';
+import { FontSizes } from '@/constants/typography';
 import { SonnyAuthStepsProps } from '@/interfaces/components/ui';
 
+const CIRCLE_SIZE = 24;
+
 const SonnyAuthSteps: React.FC<SonnyAuthStepsProps> = ({
-    currentStep,
-    totalSteps,
-    label,
-    style,
-    labelStyle,
-    stepStyle,
-    activeStepStyle,
-    inactiveStepStyle,
-}) => {
-    const getContainerStyle = (): ViewStyle => {
-        return {
-            marginBottom: 24,
-            ...style,
-        };
-    };
-
-    const getLabelStyle = (): TextStyle => {
-        return {
-            fontSize: 18,
-            fontWeight: '700',
-            color: Colors.black,
-            marginBottom: 16,
-            ...labelStyle,
-        };
-    };
-
-    const getStepsContainerStyle = (): ViewStyle => {
-        return {
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-        };
-    };
-
-    const getStepStyle = (stepIndex: number): ViewStyle => {
-        const isActive = stepIndex <= currentStep;
-        const isCurrent = stepIndex === currentStep;
-
-        const baseStepStyle: ViewStyle = {
-            height: 8,
-            borderRadius: 4,
-            flex: 1,
-            marginHorizontal: 2,
-        };
-
-        const activeStyle: ViewStyle = {
-            backgroundColor: Colors.primary,
-        };
-
-        const inactiveStyle: ViewStyle = {
-            backgroundColor: Colors.lightGrey,
-        };
-
-        return {
-            ...baseStepStyle,
-            ...(isActive ? activeStyle : inactiveStyle),
-            ...(isActive ? activeStepStyle : inactiveStepStyle),
-            ...(isCurrent ? stepStyle : {}),
-        };
-    };
-
-    return (
-        <View style={getContainerStyle()}>
-            <Text style={getLabelStyle()}>{label}</Text>
-            <View style={getStepsContainerStyle()}>
-                {Array.from({ length: totalSteps }, (_, index) => (
-                    <View key={index} style={getStepStyle(index + 1)} />
-                ))}
+  currentStep,
+  totalSteps,
+  label,
+  style,
+  labelStyle,
+  stepsStyle,
+  stepStyle,
+  activeStepStyle,
+  inactiveStepStyle,
+}) => (
+  <View style={[styles.container, style]}>
+    {label && <Text variant="subtitle" weight="bold" style={[styles.label, labelStyle]}>{label}</Text>}
+    <View style={[styles.row, stepsStyle]}>
+      {Array.from({ length: totalSteps }, (_, i) => {
+        const stepNum = i + 1;
+        const isCompleted = stepNum <= currentStep;
+        const isLast = i === totalSteps - 1;
+        const connectorComplete = stepNum < currentStep;
+        return (
+          <React.Fragment key={i}>
+            <View
+              style={[
+                styles.circle,
+                isCompleted ? (activeStepStyle ?? styles.circleActive) : (inactiveStepStyle ?? styles.circleInactive),
+                stepStyle,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.circleText,
+                  isCompleted ? styles.circleTextActive : styles.circleTextInactive,
+                ]}
+              >
+                {stepNum}
+              </Text>
             </View>
-        </View>
-    );
-};
+            {!isLast && (
+              <View
+                style={[
+                  styles.connector,
+                  connectorComplete ? styles.connectorComplete : styles.connectorIncomplete,
+                ]}
+              />
+            )}
+          </React.Fragment>
+        );
+      })}
+    </View>
+  </View>
+);
+
+const styles = StyleSheet.create({
+  container: { marginBottom: 24 },
+  label: { marginBottom: 16 },
+  row: { flexDirection: 'row', alignItems: 'center' },
+  circle: {
+    width: CIRCLE_SIZE,
+    height: CIRCLE_SIZE,
+    borderRadius: CIRCLE_SIZE / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  circleActive: { backgroundColor: Colors.primary },
+  circleInactive: { backgroundColor: Colors.lightGrey },
+  circleText: { fontSize: FontSizes.sm, fontWeight: '600' },
+  circleTextActive: { color: Colors.white },
+  circleTextInactive: { color: Colors.grey },
+  connector: {
+    flex: 1,
+    height: 2,
+    marginHorizontal: 4,
+    borderRadius: 1,
+  },
+  connectorComplete: { backgroundColor: Colors.primary },
+  connectorIncomplete: { backgroundColor: Colors.lightGrey },
+});
 
 export default SonnyAuthSteps;

@@ -1,195 +1,109 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, FlatList, ViewStyle, TextStyle } from 'react-native';
+import { View, TouchableOpacity, Modal, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Text } from '@/components/common/Text';
 import { Colors } from '@/constants/colors';
+import { FontSizes } from '@/constants/typography';
 import { SonnyPickerProps } from '@/interfaces/components/ui';
 
 const SonnyPicker: React.FC<SonnyPickerProps> = ({
-    label,
-    placeholder,
-    value,
-    onValueChange,
-    items,
-    error,
-    disabled = false,
-    style,
-    containerStyle,
-    labelStyle,
-    errorStyle,
-    itemStyle,
-    selectedItemStyle,
+  label,
+  placeholder = 'Select',
+  value,
+  onValueChange,
+  items,
+  error,
+  disabled = false,
+  style,
+  labelStyle,
+  pickerWrapStyle,
+  pickerTextStyle,
+  errorStyle,
+  overlayStyle,
+  sheetStyle,
+  itemStyle,
+  itemTextStyle,
+  selectedItemStyle,
 }) => {
-    const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-    const getContainerStyle = (): ViewStyle => {
-        return {
-            marginBottom: 16,
-            ...style,
-        };
-    };
+  const handleSelect = (item: string) => {
+    onValueChange(item);
+    setIsVisible(false);
+  };
 
-    const getLabelStyle = (): TextStyle => {
-        return {
-            fontSize: 16,
-            fontWeight: '600',
-            color: Colors.black,
-            marginBottom: 8,
-            ...labelStyle,
-        };
-    };
-
-    const getPickerContainerStyle = (): ViewStyle => {
-        return {
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: Colors.white,
-            borderRadius: 8,
-            borderWidth: error ? 1 : 0,
-            borderColor: error ? Colors.red : 'transparent',
-            shadowColor: Colors.black,
-            shadowOffset: {
-                width: 0,
-                height: 1,
-            },
-            shadowOpacity: 0.05,
-            shadowRadius: 2,
-            elevation: 1,
-            ...containerStyle,
-        };
-    };
-
-    const getPickerStyle = (): ViewStyle => {
-        return {
-            flex: 1,
-            paddingVertical: 12,
-            paddingHorizontal: 16,
-            minHeight: 48,
-            justifyContent: 'center',
-        };
-    };
-
-    const getPickerTextStyle = (): TextStyle => {
-        return {
-            fontSize: 16,
-            color: value ? Colors.black : Colors.grey,
-            ...(disabled && { color: Colors.grey }),
-        };
-    };
-
-    const getErrorStyle = (): TextStyle => {
-        return {
-            fontSize: 14,
-            color: Colors.red,
-            marginTop: 4,
-            ...errorStyle,
-        };
-    };
-
-    const getItemStyle = (): ViewStyle => {
-        return {
-            paddingVertical: 16,
-            paddingHorizontal: 20,
-            borderBottomWidth: 1,
-            borderBottomColor: Colors.lightGrey,
-            ...itemStyle,
-        };
-    };
-
-    const getSelectedItemStyle = (): ViewStyle => {
-        return {
-            backgroundColor: Colors.lightGrey,
-            ...selectedItemStyle,
-        };
-    };
-
-    const getItemTextStyle = (): TextStyle => {
-        return {
-            fontSize: 16,
-            color: Colors.black,
-        };
-    };
-
-    const handleItemSelect = (item: string) => {
-        onValueChange(item);
-        setIsVisible(false);
-    };
-
-    const renderItem = ({ item }: { item: string }) => (
-        <TouchableOpacity
-            style={[
-                getItemStyle(),
-                value === item && getSelectedItemStyle(),
-            ]}
-            onPress={() => handleItemSelect(item)}
-            activeOpacity={0.7}
+  return (
+    <View style={[styles.container, style]}>
+      {label && <Text weight="semiBold" style={[styles.label, labelStyle]}>{label}</Text>}
+      <TouchableOpacity
+        style={[styles.pickerWrap, error && styles.pickerWrapError, pickerWrapStyle]}
+        onPress={() => !disabled && setIsVisible(true)}
+        disabled={disabled}
+        activeOpacity={0.7}
+      >
+        <Text
+          style={[
+            styles.pickerText,
+            !value && styles.placeholder,
+            disabled && styles.disabled,
+            pickerTextStyle,
+          ]}
         >
-            <Text style={getItemTextStyle()}>{item}</Text>
-        </TouchableOpacity>
-    );
+          {value || placeholder}
+        </Text>
+        <Ionicons name="chevron-down" size={20} color={Colors.grey} style={styles.chevron} />
+      </TouchableOpacity>
+      {error && <Text variant="caption" style={[styles.error, errorStyle]}>{error}</Text>}
 
-    return (
-        <View style={getContainerStyle()}>
-            <Text style={getLabelStyle()}>{label}</Text>
-            <TouchableOpacity
-                style={getPickerContainerStyle()}
-                onPress={() => !disabled && setIsVisible(true)}
-                disabled={disabled}
-                activeOpacity={0.7}
-            >
-                <View style={getPickerStyle()}>
-                    <Text style={getPickerTextStyle()}>
-                        {value || placeholder}
-                    </Text>
-                </View>
-                <View style={{ padding: 12 }}>
-                    <Ionicons
-                        name="chevron-down"
-                        size={20}
-                        color={Colors.grey}
-                    />
-                </View>
-            </TouchableOpacity>
-            {error && <Text style={getErrorStyle()}>{error}</Text>}
-
-            <Modal
-                visible={isVisible}
-                transparent
-                animationType="fade"
-                onRequestClose={() => setIsVisible(false)}
-            >
+      <Modal visible={isVisible} transparent animationType="fade" onRequestClose={() => setIsVisible(false)}>
+        <TouchableOpacity
+          style={[styles.overlay, overlayStyle]}
+          activeOpacity={1}
+          onPress={() => setIsVisible(false)}
+        >
+          <View style={[styles.sheet, sheetStyle]}>
+            <FlatList
+              data={items}
+              keyExtractor={(item) => item}
+              renderItem={({ item }) => (
                 <TouchableOpacity
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        justifyContent: 'center',
-                        padding: 20,
-                    }}
-                    activeOpacity={1}
-                    onPress={() => setIsVisible(false)}
+                  style={[styles.item, value === item && (selectedItemStyle ?? styles.itemSelected), itemStyle]}
+                  onPress={() => handleSelect(item)}
+                  activeOpacity={0.7}
                 >
-                    <View
-                        style={{
-                            backgroundColor: Colors.white,
-                            borderRadius: 12,
-                            maxHeight: 300,
-                            shadowColor: Colors.black,
-                            shadowOffset: { width: 0, height: 2 },
-                            shadowOpacity: 0.25,
-                            shadowRadius: 4,
-                            elevation: 5,
-                        }}
-                    >
-                        <FlatList
-                            data={items}
-                            renderItem={renderItem}
-                            keyExtractor={(item, index) => `${item}-${index}`}
-                            showsVerticalScrollIndicator={false}
-                        />
-                    </View>
+                  <Text style={[styles.itemText, itemTextStyle]}>{item}</Text>
                 </TouchableOpacity>
-            </Modal>
-        </View>
-    );
+              )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+    </View>
+  );
 };
+
+const styles = StyleSheet.create({
+  container: { marginBottom: 16 },
+  label: { fontSize: FontSizes.body, color: Colors.black, marginBottom: 8 },
+  pickerWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.white,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: Colors.lightGrey,
+  },
+  pickerWrapError: { borderColor: Colors.red },
+  pickerText: { flex: 1, paddingVertical: 12, paddingHorizontal: 16, fontSize: FontSizes.body, color: Colors.black },
+  placeholder: { color: Colors.grey },
+  disabled: { color: Colors.grey },
+  chevron: { padding: 12 },
+  error: { color: Colors.red, marginTop: 4 },
+  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: 20 },
+  sheet: { backgroundColor: Colors.white, borderRadius: 12, maxHeight: 300 },
+  item: { paddingVertical: 16, paddingHorizontal: 20, borderBottomWidth: 1, borderBottomColor: Colors.lightGrey },
+  itemSelected: { backgroundColor: Colors.lightGrey },
+  itemText: { fontSize: FontSizes.body, color: Colors.black },
+});
 
 export default SonnyPicker;

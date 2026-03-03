@@ -1,99 +1,100 @@
 # React Native Expo Starter Template
 
-A comprehensive React Native starter template built with Expo, featuring a modern tech stack, reusable UI components, and a well-structured codebase. This template provides everything you need to kickstart your mobile app development with TypeScript, state management, and a consistent design system.
+A React Native starter built with Expo, reusable UI components, and a structured codebase. Ready for mobile app development with TypeScript and a design system.
 
 ## Features
 
-- 🚀 **Expo Router** - File-based navigation system
-- 🎨 **Custom UI Components** - Pre-built, reusable components with consistent styling
-- 💎 **Expo UI / Liquid Glass** - Native tabs with liquid glass effect support (iOS 26+)
-- 📱 **TypeScript** - Full type safety throughout the application
-- 🎯 **State Management** - Zustand for lightweight state management
-- 🎨 **NativeWind** - Tailwind CSS for React Native styling
-- 📚 **Documentation** - Comprehensive examples and usage guides
-- 🔧 **Development Ready** - Pre-configured with linting, formatting, and build tools
+- **Expo Router** – File-based navigation
+- **Native Tabs** – iOS (SF Symbols) and Android (Material icons) via `expo-router/unstable-native-tabs`; web uses JS fallback
+- **Form Sheet Bottom Sheet** – Native bottom sheet with detents via [Expo Router modals](https://docs.expo.dev/router/advanced/modals/#form-sheet-presentation)
+- **Typography System** – `constants/typography.ts` (FontSizes, FontWeights, LineHeights); `constants/fonts.ts` (Poppins)
+- **Custom UI Components** – Button, Input, Picker, OTP, Image Picker, Doc Picker, Toast, Auth Steps, Bottom Sheet
+- **TypeScript** – Full type safety
+- **Zustand** – Lightweight state management
+- **NativeWind** – Tailwind CSS for React Native
+- **Poppins Font** – Custom fonts from `assets/fonts/`
+- **Documentation** – Simple usage examples in `docs/`
 
-## Project Structure
+## Setup
 
-```
-starter-app/
-├── app/                    # Expo Router pages
-│   ├── _layout.tsx        # Root layout
-│   ├── index.tsx          # Home page
-│   └── +not-found.tsx     # 404 page
-├── components/            # Reusable components
-│   ├── common/           # Common components
-│   │   └── MainContainer.tsx
-│   └── ui/               # UI components
-│       ├── SonnyButton.tsx
-│       ├── SonnyInput.tsx
-│       ├── SonnyPicker.tsx
-│       ├── SonnyAuthSteps.tsx
-│       └── SonnyDocPicker.tsx
-├── config/               # Configuration files
-│   ├── firebase.ts       # Firebase configuration
-│   └── supabase.ts       # Supabase configuration
-├── constants/            # App constants
-│   └── colors.ts         # Color palette
-├── interfaces/           # TypeScript interfaces
-│   ├── auth/            # Auth interfaces
-│   └── components/      # Component interfaces
-├── store/               # State management
-│   └── auth.ts          # Auth store (Zustand)
-├── hooks/               # Custom React hooks
-├── services/            # API services and external integrations
-├── types/               # Type definitions
-├── utils/               # Utility functions
-├── docs/                # Documentation & examples
-│   ├── component-examples.tsx
-│   └── fonts.tsx        # Font usage examples
-└── assets/              # Static assets
-```
+1. **Clone the project** and go into the folder:
 
-## Tech Stack
+   ```bash
+   git clone <repository-url>
+   cd starter-template-expo
+   ```
 
-- **React Native** with Expo
-- **TypeScript** for type safety
-- **NativeWind** for styling
-- **Zustand** for state management
-- **Expo Router** for navigation
-
-## Getting Started
-
-1. **Install dependencies**
+2. **Install dependencies** (use one of):
 
    ```bash
    npm install
    ```
 
-2. **Check if packages are Expo compatible and up to date**
+   or `bun install` / `yarn install`.
+
+3. **Check and fix the Expo environment** (recommended):
+
+   ```bash
+   npx expo-doctor
+   ```
+
+   Or to validate and align package versions with the Expo SDK:
 
    ```bash
    npx expo install --check
    ```
 
-3. **Start development server**
+   Fix any reported issues before starting the app.
 
-- `npx expo start`: Start Expo development server
-- `npx expo start -c`: Start Expo server with cache clean
+4. **Start the app**:
+
+   ```bash
+   npx expo start
+   ```
+
+   Then open in iOS simulator, Android emulator, or scan the QR code with the Expo Go app.
+
+## Project Structure
 
 ```
-
-4. **View component examples**
-   - Check `docs/component-examples.tsx` for usage examples
-   - All UI components are documented with props and examples
+starter-app/
+├── app/
+│   ├── (dash)/(tabs)/   # Tab layout (Native Tabs on iOS/Android, JS on web)
+│   ├── (dash)/sheet.tsx # Form sheet modal
+│   ├── _layout.tsx      # Root layout, font loading
+│   └── index.tsx
+├── components/
+│   ├── common/          # MainContainer, Text
+│   ├── shared/          # SonnyToast
+│   └── ui/              # SonnyButton, SonnyInput, SonnyPicker, SonnyOtpInput, SonnyImagePicker, SonnyDocPicker, SonnyAuthSteps, SonnyBottomSheet
+├── constants/
+│   ├── colors.ts
+│   ├── fonts.ts         # Poppins fonts
+│   ├── typography.ts    # FontSizes, FontWeights, LineHeights
+│   └── tabs.ts         # Tab config (sf/md icons)
+├── docs/                # Usage examples
+│   ├── README.md        # Simple copy-paste snippets
+│   ├── component-examples.tsx
+│   ├── fonts.tsx
+│   └── toast.tsx
+├── config/              # Firebase, Supabase
+├── store/               # Zustand
+└── assets/fonts/        # Poppins font files
+```
 
 ## Key Features
 
-- **Reusable UI Components** - Custom button, input, picker, and document upload components
-- **MainContainer** - Consistent layout wrapper with safe area handling
-- **Typography System** - Custom font utilities and text components
-- **State Management** - Zustand store for auth and registration data
-- **TypeScript** - Full type safety throughout the application
-- **Responsive Design** - NativeWind for consistent styling
+| Feature | Location |
+|---------|----------|
+| **Typography** | `constants/typography.ts`, `constants/fonts.ts` |
+| **Text component** | `components/common/Text` – variants: body, title, subtitle, caption |
+| **Native Tabs** | `app/(dash)/(tabs)/_layout.tsx` (native), `_layout.web.tsx` (web) |
+| **Bottom Sheet** | `components/ui/SonnyBottomSheet`, `app/(dash)/sheet.tsx` |
+| **Usage examples** | `docs/README.md` – concise snippets for all components |
 
 ## Documentation
 
-- **Component Examples** - See `docs/component-examples.tsx` for comprehensive usage examples of all UI components
-- **Font Usage** - See `docs/fonts.tsx` for typography and text component examples
-```
+- **`docs/README.md`** – Copy-paste usage for typography, Text, Button, Input, Picker, Toast, OTP, Image Picker, Bottom Sheet, MainContainer
+- **`docs/component-examples.tsx`** – Runnable demo of core components
+- **`docs/fonts.tsx`** – Text component variants
+- **`docs/toast.tsx`** – Toast usage
