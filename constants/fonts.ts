@@ -1,6 +1,5 @@
 import { FontSizes, FontWeights } from '@/constants/typography';
 
-/** Poppins font families loaded from assets/fonts/ */
 export const Fonts = {
   regular: 'Poppins',
   medium: 'Poppins-Medium',
