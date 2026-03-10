@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text as RNText, TextProps, StyleSheet } from 'react-native';
+import { useTheme } from '@/contexts/ThemeContext';
 import { fonts } from '@/constants/fonts';
 import { FontSizes } from '@/constants/typography';
 
@@ -28,21 +29,26 @@ export const Text: React.FC<CustomTextProps> = ({
   weight = 'regular',
   children,
   ...props
-}) => (
-  <RNText
-    style={[
-      styles.base,
-      {
-        fontSize: variantFontSize[variant],
-        fontFamily: weightFontFamily[weight],
-      },
-      style,
-    ]}
-    {...props}
-  >
-    {children}
-  </RNText>
-);
+}) => {
+  const { colors } = useTheme();
+  const textColor = (style ? (StyleSheet.flatten(style) as { color?: string })?.color : undefined) ?? colors.black;
+  return (
+    <RNText
+      style={[
+        styles.base,
+        {
+          fontSize: variantFontSize[variant],
+          fontFamily: weightFontFamily[weight],
+          color: textColor,
+        },
+        style,
+      ]}
+      {...props}
+    >
+      {children}
+    </RNText>
+  );
+};
 
 const styles = StyleSheet.create({
   base: {

@@ -44,6 +44,8 @@ Use these guidelines when:
 | Routing, layouts, params | 14. Expo Router |
 | App Store / Play Store | 15. EAS Build |
 | Large bundle, tree shaking | 10. Project Conventions (barrel imports) |
+| API errors, structured parsing, 4xx vs 5xx | [api-error-handling.mdc](agent/api-error-handling.mdc) |
+| Zustand + React Query boundaries | 1a. Zustand & React Query |
 
 ---
 
@@ -113,6 +115,41 @@ const mutation = useMutation({
 
 **Common pitfalls:** Raw `useEffect` + fetch; missing `invalidateQueries` on mutation success; no `staleTime` causing excess refetches.
 
+### 1a. Zustand & React Query [MODULARITY]
+
+Use each for what it does best. Keep boundaries clear for readability and simplicity:
+
+| Store | Use for | Location |
+|-------|---------|----------|
+| **React Query** | Server state (API data, cache, sync with backend) | `queryFn` calls services; `queryKey` drives cache |
+| **Zustand** | Client state (auth flags, UI preferences, filters, ephemeral state) | `store/` by domain (e.g. `store/auth.ts`, `store/preferences.ts`) |
+
+**Do not duplicate** server data in Zustand when React Query already has it. Use Zustand for what React Query does not handle:
+
+- Auth status (`isAuthenticated`, `userId`) — Zustand; React Query uses it for `enabled` or query keys
+- Selected filters, sort, tab — Zustand; pass to `queryFn` as params
+- Drawer open/closed, modal state — Zustand or local `useState`
+- Mutation success side effects — update Zustand (e.g. auth store) *and* `invalidateQueries`; don't write fetched data into Zustand
+
+**Modular pattern** — Keep stores small and domain-scoped:
+
+```typescript
+// store/auth.ts — client-only auth state
+export const useAuthStore = create<AuthState>()(
+  persist((set) => ({ ... }), { name: 'auth' })
+);
+
+// hooks/useUser.ts — React Query uses auth store
+const userId = useAuthStore((s) => s.userId);
+const { data } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId!),
+  enabled: !!userId,
+});
+```
+
+**When both touch the same flow** — Mutation succeeds → update Zustand if needed (e.g. set user) → `invalidateQueries` so React Query refetches. Single source of truth for server data stays in React Query.
+
 ---
 
 ## 2. API Layer & Backend Integration [HIGH]
@@ -128,7 +165,7 @@ services/
   auth.service.ts  # Auth-related API calls
 ```
 
-**Base client** – Single place for base URL, auth, error handling:
+**Base client** – Single place for base URL, auth, error handling. For structured API error parsing (ApiError, validation details), see [api-error-handling.mdc](agent/api-error-handling.mdc).
 
 ```typescript
 // services/api/client.ts
@@ -281,6 +318,7 @@ const fullName = `${first} ${last}`;
 - **Error boundaries** – Wrap major sections.
 - **User-facing errors** – Generic messages (e.g. "Something went wrong."). Never expose stack traces.
 - **Async errors** – Use `try/catch` and proper error types.
+- **API errors** – For structured backend errors (ApiError, 4xx vs 5xx, validation details), see [api-error-handling.mdc](agent/api-error-handling.mdc).
 
 ---
 

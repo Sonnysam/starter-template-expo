@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { TABS } from '@/constants/tabs';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -14,16 +14,17 @@ function getTabIcon(name: string): keyof typeof Ionicons.glyphMap {
 }
 
 export default function WebTabLayout() {
+  const { colors } = useTheme();
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.grey,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.grey,
         tabBarStyle: {
-          backgroundColor: Colors.white,
+          backgroundColor: colors.white,
           borderTopWidth: 1,
-          borderTopColor: Colors.lightGrey,
+          borderTopColor: colors.lightGrey,
         },
       }}
     >

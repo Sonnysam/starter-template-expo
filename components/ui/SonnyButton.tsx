@@ -2,15 +2,9 @@ import React from 'react';
 import { TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
 import { SonnyButtonProps } from '@/interfaces/components/ui';
-
-const variantDefaults: Record<string, { bg: string; border?: string; textColor: string }> = {
-  basic: { bg: Colors.primary, textColor: Colors.white },
-  outline: { bg: 'transparent', border: Colors.primary, textColor: Colors.primary },
-  custom: { bg: 'transparent', textColor: Colors.black },
-};
 
 const SonnyButton: React.FC<SonnyButtonProps> = ({
   title,
@@ -23,7 +17,12 @@ const SonnyButton: React.FC<SonnyButtonProps> = ({
   iconName,
   iconPosition = 'right',
 }) => {
-  const { textColor } = variantDefaults[variant];
+  const { colors } = useTheme();
+  const variantDefaults: Record<string, { bg: string; border?: string; textColor: string }> = {
+    basic: { bg: colors.primary, textColor: colors.white },
+    outline: { bg: 'transparent', border: colors.primary, textColor: colors.primary },
+    custom: { bg: 'transparent', textColor: colors.black },
+  };
   const v = variantDefaults[variant];
   const btnStyle = [
     styles.base,
@@ -41,15 +40,15 @@ const SonnyButton: React.FC<SonnyButtonProps> = ({
       activeOpacity={0.8}
     >
       {loading ? (
-        <ActivityIndicator color={textStyle?.color ?? textColor} />
+        <ActivityIndicator color={textStyle?.color ?? v.textColor} />
       ) : (
         <>
           {iconName && iconPosition === 'left' && (
-            <Ionicons name={iconName} size={20} color={textStyle?.color ?? textColor} style={styles.iconLeft} />
+            <Ionicons name={iconName} size={20} color={textStyle?.color ?? v.textColor} style={styles.iconLeft} />
           )}
-          <Text weight="semiBold" style={[styles.text, { color: textColor }, textStyle]}>{title}</Text>
+          <Text weight="semiBold" style={[styles.text, { color: v.textColor }, textStyle]}>{title}</Text>
           {iconName && iconPosition === 'right' && (
-            <Ionicons name={iconName} size={20} color={textStyle?.color ?? textColor} style={styles.iconRight} />
+            <Ionicons name={iconName} size={20} color={textStyle?.color ?? v.textColor} style={styles.iconRight} />
           )}
         </>
       )}

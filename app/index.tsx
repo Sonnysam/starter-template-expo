@@ -9,7 +9,6 @@ const Page = () => {
 
   useEffect(() => {
     if (isSignedIn) {
-      // Small timeout ensures the router is fully mounted on Android
       const timeout = setTimeout(() => {
         router.replace("/(dash)/(tabs)/home");
       }, 100);

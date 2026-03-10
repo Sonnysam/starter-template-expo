@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
 import { SonnyInputProps } from '@/interfaces/components/ui';
 
@@ -24,6 +24,35 @@ const SonnyInput: React.FC<SonnyInputProps> = ({
   errorStyle,
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 16 },
+        label: { fontSize: FontSizes.body, color: colors.black, marginBottom: 8 },
+        inputWrap: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          backgroundColor: colors.white,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: colors.lightGrey,
+        },
+        inputWrapError: { borderColor: colors.red },
+        input: {
+          flex: 1,
+          paddingVertical: 12,
+          paddingHorizontal: 16,
+          fontSize: FontSizes.body,
+          color: colors.black,
+          minHeight: 48,
+        },
+        inputDisabled: { color: colors.grey },
+        toggle: { padding: 12 },
+        error: { color: colors.red, marginTop: 4 },
+      }),
+    [colors]
+  );
 
   return (
     <View style={[styles.container, style]}>
@@ -33,7 +62,7 @@ const SonnyInput: React.FC<SonnyInputProps> = ({
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor={Colors.grey}
+          placeholderTextColor={colors.grey}
           secureTextEntry={secureTextEntry && !isPasswordVisible}
           editable={!disabled}
           keyboardType={keyboardType}
@@ -42,7 +71,7 @@ const SonnyInput: React.FC<SonnyInputProps> = ({
         />
         {showPasswordToggle && (
           <TouchableOpacity onPress={() => setIsPasswordVisible((v) => !v)} style={styles.toggle}>
-            <Ionicons name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} color={Colors.grey} />
+            <Ionicons name={isPasswordVisible ? 'eye-off' : 'eye'} size={20} color={colors.grey} />
           </TouchableOpacity>
         )}
       </View>
@@ -50,30 +79,5 @@ const SonnyInput: React.FC<SonnyInputProps> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { marginBottom: 16 },
-  label: { fontSize: FontSizes.body, color: Colors.black, marginBottom: 8 },
-  inputWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.lightGrey,
-  },
-  inputWrapError: { borderColor: Colors.red },
-  input: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    fontSize: FontSizes.body,
-    color: Colors.black,
-    minHeight: 48,
-  },
-  inputDisabled: { color: Colors.grey },
-  toggle: { padding: 12 },
-  error: { color: Colors.red, marginTop: 4 },
-});
 
 export default SonnyInput;

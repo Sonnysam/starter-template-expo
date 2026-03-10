@@ -1,6 +1,6 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useMemo } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-native';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
 import { Text } from '@/components/common/Text';
 import { SonnyOtpInputProps } from '@/interfaces/components/ui';
@@ -17,6 +17,31 @@ const SonnyOtpInput: React.FC<SonnyOtpInputProps> = ({
 }) => {
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const size = circular ? 48 : 50;
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, marginBottom: 20 },
+        box: {
+          backgroundColor: colors.grey + '20',
+          borderWidth: 1,
+          borderColor: colors.grey + '40',
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        boxError: { borderColor: colors.red },
+        input: {
+          width: '100%',
+          height: '100%',
+          fontSize: FontSizes['3xl'],
+          fontWeight: '800',
+          color: colors.primary,
+          textAlign: 'center',
+        },
+        error: { color: colors.red, textAlign: 'center', marginTop: 8 },
+      }),
+    [colors]
+  );
 
   const handleChange = useCallback(
     (text: string, index: number) => {
@@ -72,26 +97,5 @@ const SonnyOtpInput: React.FC<SonnyOtpInputProps> = ({
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, marginBottom: 20 },
-  box: {
-    backgroundColor: Colors.grey + '20',
-    borderWidth: 1,
-    borderColor: Colors.grey + '40',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  boxError: { borderColor: Colors.red },
-  input: {
-    width: '100%',
-    height: '100%',
-    fontSize: FontSizes['3xl'],
-    fontWeight: '800',
-    color: Colors.primary,
-    textAlign: 'center',
-  },
-  error: { color: Colors.red, textAlign: 'center', marginTop: 8 },
-});
 
 export default SonnyOtpInput;

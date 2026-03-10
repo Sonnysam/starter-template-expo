@@ -90,6 +90,7 @@ docs/                — Usage examples
 - **`useState`** only for trivial local UI (focus, toggles)
 - Stores in `store/`, grouped by domain (auth, user, etc.)
 - Use Zustand `persist` for state that survives app restarts
+- **Zustand + React Query** — React Query for server state; Zustand for client state (auth flags, filters, UI). Don't duplicate server data. See `agent/react-native-expo-core.mdc` Section 1a.
 
 ---
 
@@ -120,6 +121,7 @@ docs/                — Usage examples
 - One concern per file; no direct backend logic in UI
 - UI never imports backend clients directly — go through services
 - **Supabase** (if used): keep auth and data logic in services; use typed Supabase client
+- **API errors** — Handle consistently; for structured parsing and 4xx vs 5xx rules, see `agent/api-error-handling.mdc`
 
 ---
 

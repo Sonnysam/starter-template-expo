@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Image } from 'expo-image';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
 import { SonnyImagePickerProps } from '@/interfaces/components/ui';
 
@@ -21,6 +21,30 @@ const SonnyImagePicker: React.FC<SonnyImagePickerProps> = ({
   buttonTextStyle,
   imageStyle,
 }) => {
+  const { colors } = useTheme();
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        container: { marginBottom: 16 },
+        label: { fontSize: FontSizes.body, color: colors.black, marginBottom: 8 },
+        button: {
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 8,
+          padding: 16,
+          borderRadius: 8,
+          borderWidth: 1,
+          borderColor: colors.lightGrey,
+          borderStyle: 'dashed',
+        },
+        buttonText: { fontSize: FontSizes.body, color: colors.grey },
+        imageWrap: { width: 120, height: 120, borderRadius: 8, overflow: 'hidden' },
+        image: { width: '100%', height: '100%' },
+      }),
+    [colors]
+  );
+
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -49,31 +73,12 @@ const SonnyImagePicker: React.FC<SonnyImagePickerProps> = ({
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={[styles.button, buttonStyle]} onPress={pickImage} activeOpacity={0.8}>
-          <Ionicons name="image-outline" size={24} color={Colors.grey} />
+          <Ionicons name="image-outline" size={24} color={colors.grey} />
           <Text style={[styles.buttonText, buttonTextStyle]}>{placeholder}</Text>
         </TouchableOpacity>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: { marginBottom: 16 },
-  label: { fontSize: FontSizes.body, color: Colors.black, marginBottom: 8 },
-  button: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.lightGrey,
-    borderStyle: 'dashed',
-  },
-  buttonText: { fontSize: FontSizes.body, color: Colors.grey },
-  imageWrap: { width: 120, height: 120, borderRadius: 8, overflow: 'hidden' },
-  image: { width: '100%', height: '100%' },
-});
 
 export default SonnyImagePicker;

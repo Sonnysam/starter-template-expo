@@ -1,0 +1,181 @@
+---
+description: API error handling for React Native Expo - backend error response shape, error codes, client parsing, TanStack Query, Expo Router, validation details, auth handling
+alwaysApply: false
+---
+
+# API Error Handling (React Native Expo)
+
+Client-side guide for handling standardized API errors from the backend in React Native Expo apps. Use when implementing the API client, TanStack Query mutations, forms (react-hook-form), auth flows, or error UIs.
+
+**Syncs with:** [react-native-expo-core.mdc](agent/react-native-expo-core.mdc) Section 2 (API Layer) and Section 7 (Error Handling); [rules.md](agent/rules.md) Section 9 (Backend & Services). This guide extends the base client's `throw new Error(...)` in Section 2 with structured `ApiError` parsing and replaces generic `toast.error(err.message)` in mutation `onError` with 4xx vs 5xx handling.
+
+**When to apply:** API client setup, TanStack Query `onError` handling, form validation from API, auth redirects (Expo Router), toast/error UI.
+
+## Problem → Section Mapping
+
+| Problem | See Section |
+|---------|-------------|
+| Parsing API errors in client | 3. API client behavior |
+| What to show on 4xx vs 5xx | 4. When to show what in the UI |
+| Form field errors from API | 4. Validation + 2. Types |
+| 401 / logout / refresh | 5. Auth-related codes |
+| Adding a new error code on client | 2. Types (ErrorCode) |
+
+---
+
+## 1. Standard Error Response
+
+Every error response from the backend follows this JSON shape:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "RESOURCE_NOT_FOUND",
+    "message": "Business not found",
+    "statusCode": 404,
+    "details": []
+  }
+}
+```
+
+| Field | Description |
+|-------|-------------|
+| `code` | Application error code (e.g. AUTH_TOKEN_EXPIRED, INSUFFICIENT_BALANCE) |
+| `message` | Human-readable, safe for display |
+| `statusCode` | HTTP status code |
+| `details` | Optional array of validation field errors |
+
+The public API never exposes `_debug`. Do not rely on or display any internal fields in the app.
+
+---
+
+## 2. Types to Use in the App
+
+Define types in `@/types/api-errors.ts` or `@/interfaces/api/errors.ts` to match the backend:
+
+```typescript
+export interface ValidationDetail {
+  field: string;   // Dot-notation supported (e.g. accountDetails.sortCode)
+  message: string;
+}
+
+export interface ApiErrorBody {
+  code: string;
+  message: string;
+  statusCode: number;
+  details: ValidationDetail[];
+}
+
+export interface ApiErrorResponse {
+  success: false;
+  error: ApiErrorBody;
+}
+
+// Optional: subset of known codes for typed handling
+export type ErrorCode =
+  | 'RESOURCE_NOT_FOUND'
+  | 'RESOURCE_ALREADY_EXISTS'
+  | 'VALIDATION_FAILED'
+  | 'AUTH_TOKEN_MISSING'
+  | 'AUTH_TOKEN_EXPIRED'
+  | 'AUTH_INVALID_CREDENTIALS'
+  | 'AUTH_FORBIDDEN'
+  | 'AUTH_ACCOUNT_SUSPENDED'
+  | 'INSUFFICIENT_BALANCE'
+  | 'PAYOUT_FAILED'
+  | 'INTEGRATION_ERROR'
+  | 'INTERNAL_ERROR';
+```
+
+The API client should throw a typed error (e.g. `ApiError`) that carries `code`, `message`, `statusCode`, and `details`. Use `ErrorCode` (or a matching enum) instead of magic strings when checking codes.
+
+---
+
+## 3. API Client Behavior
+
+Centralize error parsing in `@/services/api/client.ts`. Use `fetch` (built-in). For auth tokens, use `expo-secure-store` as in the core API layer. On non-ok response:
+
+1. Read body as JSON.
+2. If it matches the standard shape (`success === false` and `error`), throw an `ApiError` with `error.code`, `error.message`, `error.statusCode`, `error.details`.
+3. If response is not JSON or doesn’t match, throw a generic client-side error (e.g. "Request failed"); do not expose raw response body to UI.
+
+```typescript
+// services/api/client.ts - error handling snippet
+if (!res.ok) {
+  let body: unknown;
+  try {
+    body = await res.json();
+  } catch {
+    throw new Error('Request failed');
+  }
+  const data = body as { success?: boolean; error?: ApiErrorBody };
+  if (data.success === false && data.error) {
+    throw new ApiError(data.error.code, data.error.message, data.error.statusCode, data.error.details ?? []);
+  }
+  throw new Error('Request failed');
+}
+```
+
+Implement `ApiError` as a class extending `Error` with `code`, `statusCode`, and `details` properties. Handle 401 (AUTH_TOKEN_EXPIRED / AUTH_TOKEN_MISSING) in this client or the auth service—refresh token or logout, then use Expo Router (e.g. `router.replace('/(auth)/login')`) to redirect to login.
+
+---
+
+## 4. When to Show What in the UI
+
+| Status | What to show |
+|--------|--------------|
+| **4xx (client errors)** | Use `error.message` from the API—it is safe for display. |
+| **5xx (server/integration)** | Generic message only: e.g. "Something went wrong. Please try again." Never show stack traces or internal details. |
+| **Validation** | Map `error.details` to form fields: `setError(detail.field, { message: detail.message })` with react-hook-form. |
+
+Never display `_debug` or provider-specific content.
+
+**TanStack Query mutation `onError`** — Use your app's toast (e.g. from `@/components/shared/Toast` or similar) and apply the 4xx vs 5xx rule:
+
+```typescript
+const mutation = useMutation({
+  mutationFn: updateProfile,
+  onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user'] }),
+  onError: (err) => {
+    const msg = err instanceof ApiError && err.statusCode < 500
+      ? err.message
+      : 'Something went wrong. Please try again.';
+    toast.error(msg);
+    // For form mutations: apply validation details via setError
+    if (err instanceof ApiError && err.details.length > 0) {
+      err.details.forEach((d) => setError(d.field, { message: d.message }));
+    }
+  },
+});
+```
+
+---
+
+## 5. Auth-Related Codes
+
+| Code | Action |
+|------|--------|
+| **AUTH_TOKEN_EXPIRED / AUTH_TOKEN_MISSING (401)** | Trigger refresh token or logout; redirect to login via Expo Router (e.g. `router.replace('/(auth)/login')`). Centralize in API client or `@/services/auth.service.ts`. |
+| **AUTH_FORBIDDEN (403)** | Show `error.message`. |
+| **AUTH_ACCOUNT_SUSPENDED** | Show a specific message or screen if applicable. |
+| **AUTH_INVALID_CREDENTIALS** | Show `error.message` on login/sign-in (e.g. "Invalid OTP"). |
+
+---
+
+## 6. Do's and Don'ts
+
+**Do**
+
+- Use a typed error (e.g. `ApiError`) in the client.
+- Show backend `message` for 4xx errors.
+- Use `details` for form field errors via `setError`.
+- Handle auth codes in one place (client or auth service).
+- Use the `ErrorCode` type instead of magic strings when checking codes.
+
+**Don't**
+
+- Expose `_debug`, stack traces, or raw response bodies in the UI.
+- Use magic strings for error codes when a type exists.
+- Duplicate auth handling in every screen.
+- Parse or rely on non-standard response shapes.

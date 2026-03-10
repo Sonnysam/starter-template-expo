@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Animated, StyleSheet, View } from 'react-native'
-import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react'
+import { Animated, View } from 'react-native';
+import React, { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { Text } from '../common/Text';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes, LineHeights } from '@/constants/typography';
 import { Ionicons } from '@expo/vector-icons';
 import { SonnyToastProps, SonnyToastRef } from '@/interfaces/components/toast';
@@ -10,6 +10,7 @@ import { SonnyToastProps, SonnyToastRef } from '@/interfaces/components/toast';
 let globalToastRef: SonnyToastRef | null = null;
 
 const SonnyToast = forwardRef<SonnyToastRef, SonnyToastProps>((props, ref) => {
+    const { colors } = useTheme();
     const fadeAnim = useRef(new Animated.Value(0)).current;
     const translateAnim = useRef(new Animated.Value(-100)).current;
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -113,53 +114,97 @@ const SonnyToast = forwardRef<SonnyToastRef, SonnyToastProps>((props, ref) => {
     const getIconColor = () => {
         switch (toastConfig.type) {
             case 'success':
-                return Colors.success;
+                return colors.success;
             case 'error':
-                return Colors.red;
+                return colors.red;
             case 'warning':
-                return Colors.orange;
+                return colors.orange;
             case 'info':
             default:
-                return Colors.primary;
+                return colors.primary;
         }
     };
 
     const getBackgroundColor = () => {
         switch (toastConfig.type) {
             case 'success':
-                return Colors.success + '20';
+                return colors.success + '20';
             case 'error':
-                return Colors.red + '20';
+                return colors.red + '20';
             case 'warning':
-                return Colors.orange + '20';
+                return colors.orange + '20';
             case 'info':
             default:
-                return Colors.primary + '20';
+                return colors.primary + '20';
         }
+    };
+
+    const toastStyles = {
+        container: {
+            position: 'absolute' as const,
+            top: 60,
+            left: 20,
+            right: 20,
+            backgroundColor: colors.white,
+            borderRadius: 12,
+            padding: 16,
+            flexDirection: 'row' as const,
+            alignItems: 'center' as const,
+            shadowColor: colors.black,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+            elevation: 5,
+            zIndex: 9999,
+        },
+        textContainer: { flex: 1 },
+        title: {
+            color: colors.success,
+            fontSize: FontSizes.body,
+            fontWeight: 'bold' as const,
+            marginBottom: 4,
+        },
+        description: {
+            color: colors.grey,
+            fontSize: FontSizes.caption,
+            lineHeight: FontSizes.caption * LineHeights.normal,
+        },
     };
 
     return (
         <Animated.View
             style={[
-                styles.container,
+                toastStyles.container,
                 {
                     opacity: fadeAnim,
                     transform: [{ translateY: translateAnim }],
-                }
+                },
             ]}
         >
             {toastConfig.showIcon && (
-                <View style={[styles.iconContainer, { backgroundColor: getBackgroundColor() }]}>
+                <View
+                    style={[
+                        {
+                            width: 40,
+                            height: 40,
+                            borderRadius: 20,
+                            backgroundColor: getBackgroundColor(),
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginRight: 12,
+                        },
+                    ]}
+                >
                     <Ionicons name={getIconName()} size={20} color={getIconColor()} />
                 </View>
             )}
-            <View style={styles.textContainer}>
+            <View style={toastStyles.textContainer}>
                 {toastConfig.title && (
-                    <Text variant="body" weight="bold" style={[styles.title, { color: getIconColor() }]}>
+                    <Text variant="body" weight="bold" style={[toastStyles.title, { color: getIconColor() }]}>
                         {toastConfig.title}
                     </Text>
                 )}
-                <Text variant="caption" weight="regular" style={styles.description}>
+                <Text variant="caption" weight="regular" style={toastStyles.description}>
                     {currentMessage}
                 </Text>
             </View>
@@ -226,52 +271,6 @@ export const SonnyToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         </>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        top: 60,
-        left: 20,
-        right: 20,
-        backgroundColor: Colors.white,
-        borderRadius: 12,
-        padding: 16,
-        flexDirection: 'row',
-        alignItems: 'center',
-        shadowColor: Colors.black,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 5,
-        zIndex: 9999,
-    },
-    iconContainer: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: Colors.success + '20',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 12,
-    },
-    textContainer: {
-        flex: 1,
-    },
-    title: {
-        color: Colors.success,
-        fontSize: FontSizes.body,
-        fontWeight: 'bold',
-        marginBottom: 4,
-    },
-    description: {
-        color: Colors.grey,
-        fontSize: FontSizes.caption,
-        lineHeight: FontSizes.caption * LineHeights.normal,
-    },
-});
 
 export default SonnyToast;
 export { SonnyToastProps, SonnyToastRef };

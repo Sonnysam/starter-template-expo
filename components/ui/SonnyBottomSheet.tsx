@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { Text } from '@/components/common/Text';
-import { FontSizes } from '@/constants/typography';
-import { Colors } from '@/constants/colors';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface SonnyBottomSheetProps {
   title?: string;
@@ -10,23 +9,19 @@ interface SonnyBottomSheetProps {
   style?: ViewStyle;
 }
 
-const SonnyBottomSheet: React.FC<SonnyBottomSheetProps> = ({ title, children, style }) => (
-  <View style={[styles.container, style]}>
-    {title && <Text variant="title" weight="bold" style={styles.title}>{title}</Text>}
-    {children}
-  </View>
-);
+const SonnyBottomSheet: React.FC<SonnyBottomSheetProps> = ({ title, children, style }) => {
+  const { colors } = useTheme();
+  return (
+    <View style={[styles.container, { backgroundColor: colors.white }, style]}>
+      {title && <Text variant="title" weight="bold" style={[styles.title, { color: colors.black }]}>{title}</Text>}
+      {children}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 24,
-    backgroundColor: Colors.white,
-  },
-  title: {
-    marginBottom: 16,
-    color: Colors.black,
-  },
+  container: { flex: 1, padding: 24 },
+  title: { marginBottom: 16 },
 });
 
 export default SonnyBottomSheet;

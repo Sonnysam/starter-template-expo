@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { Text } from '@/components/common/Text'
+import { spacing } from '@/constants/spacing'
 
 export default function GetStarted() {
     return (
@@ -15,5 +16,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+        borderBottomWidth: spacing['2xl'],
+        
     }
 })

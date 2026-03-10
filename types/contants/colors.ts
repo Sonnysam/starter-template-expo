@@ -1,4 +1,4 @@
-export type Props = {
+export type ColorPalette = {
   primary: string;
   black: string;
   grey: string;
@@ -10,3 +10,6 @@ export type Props = {
   orange: string;
   success: string;
 };
+
+/** @deprecated Use ColorPalette */
+export type Props = ColorPalette;
