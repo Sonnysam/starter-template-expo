@@ -4,9 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyInputProps } from '@/interfaces/components/ui';
+import type { TextFieldProps } from '@/interfaces/components/ui';
 
-const SonnyInput: React.FC<SonnyInputProps> = ({
+const TextField: React.FC<TextFieldProps> = ({
   label,
   placeholder,
   value,
@@ -80,4 +80,4 @@ const SonnyInput: React.FC<SonnyInputProps> = ({
   );
 };
 
-export default SonnyInput;
+export default TextField;

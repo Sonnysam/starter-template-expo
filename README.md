@@ -65,8 +65,8 @@ starter-app/
 │   └── index.tsx
 ├── components/
 │   ├── common/          # MainContainer, Text
-│   ├── shared/          # SonnyToast
-│   └── ui/              # SonnyButton, SonnyInput, SonnyPicker, SonnyOtpInput, SonnyImagePicker, SonnyDocPicker, SonnyAuthSteps, SonnyBottomSheet
+│   ├── shared/          # Toast
+│   └── ui/              # Button, TextField, Picker, OtpInput, ImagePicker, DocPicker, Steps, BottomSheet
 ├── constants/
 │   ├── colors.ts
 │   ├── fonts.ts         # Poppins fonts
@@ -89,7 +89,7 @@ starter-app/
 | **Typography** | `constants/typography.ts`, `constants/fonts.ts` |
 | **Text component** | `components/common/Text` – variants: body, title, subtitle, caption |
 | **Native Tabs** | `app/(dash)/(tabs)/_layout.tsx` (native), `_layout.web.tsx` (web) |
-| **Bottom Sheet** | `components/ui/SonnyBottomSheet`, `app/(dash)/sheet.tsx` |
+| **Bottom Sheet** | `components/ui/BottomSheet`, `app/(dash)/sheet.tsx` |
 | **Usage examples** | `docs/README.md` – concise snippets for all components |
 
 ## Documentation

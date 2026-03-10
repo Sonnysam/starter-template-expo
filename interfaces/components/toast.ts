@@ -1,4 +1,4 @@
-export interface SonnyToastProps {
+export interface ToastProps {
   message: string;
   visible: boolean;
   onHide?: () => void;
@@ -8,7 +8,7 @@ export interface SonnyToastProps {
   showIcon?: boolean;
 }
 
-export interface SonnyToastRef {
+export interface ToastRef {
   show: (
     message: string,
     options?: {

@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyAuthStepsProps } from '@/interfaces/components/ui';
+import type { StepsProps } from '@/interfaces/components/ui';
 
 const CIRCLE_SIZE = 24;
 
-const SonnyAuthSteps: React.FC<SonnyAuthStepsProps> = ({
+const Steps: React.FC<StepsProps> = ({
   currentStep,
   totalSteps,
   label,
@@ -45,46 +45,46 @@ const SonnyAuthSteps: React.FC<SonnyAuthStepsProps> = ({
   );
 
   return (
-  <View style={[styles.container, style]}>
-    {label && <Text variant="subtitle" weight="bold" style={[styles.label, labelStyle]}>{label}</Text>}
-    <View style={[styles.row, stepsStyle]}>
-      {Array.from({ length: totalSteps }, (_, i) => {
-        const stepNum = i + 1;
-        const isCompleted = stepNum <= currentStep;
-        const isLast = i === totalSteps - 1;
-        const connectorComplete = stepNum < currentStep;
-        return (
-          <React.Fragment key={i}>
-            <View
-              style={[
-                styles.circle,
-                isCompleted ? (activeStepStyle ?? styles.circleActive) : (inactiveStepStyle ?? styles.circleInactive),
-                stepStyle,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.circleText,
-                  isCompleted ? styles.circleTextActive : styles.circleTextInactive,
-                ]}
-              >
-                {stepNum}
-              </Text>
-            </View>
-            {!isLast && (
+    <View style={[styles.container, style]}>
+      {label && <Text variant="subtitle" weight="bold" style={[styles.label, labelStyle]}>{label}</Text>}
+      <View style={[styles.row, stepsStyle]}>
+        {Array.from({ length: totalSteps }, (_, i) => {
+          const stepNum = i + 1;
+          const isCompleted = stepNum <= currentStep;
+          const isLast = i === totalSteps - 1;
+          const connectorComplete = stepNum < currentStep;
+          return (
+            <React.Fragment key={i}>
               <View
                 style={[
-                  styles.connector,
-                  connectorComplete ? styles.connectorComplete : styles.connectorIncomplete,
+                  styles.circle,
+                  isCompleted ? (activeStepStyle ?? styles.circleActive) : (inactiveStepStyle ?? styles.circleInactive),
+                  stepStyle,
                 ]}
-              />
-            )}
-          </React.Fragment>
-        );
-      })}
+              >
+                <Text
+                  style={[
+                    styles.circleText,
+                    isCompleted ? styles.circleTextActive : styles.circleTextInactive,
+                  ]}
+                >
+                  {stepNum}
+                </Text>
+              </View>
+              {!isLast && (
+                <View
+                  style={[
+                    styles.connector,
+                    connectorComplete ? styles.connectorComplete : styles.connectorIncomplete,
+                  ]}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
+      </View>
     </View>
-  </View>
   );
 };
 
-export default SonnyAuthSteps;
+export default Steps;

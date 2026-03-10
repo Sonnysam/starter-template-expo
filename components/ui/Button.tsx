@@ -4,9 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyButtonProps } from '@/interfaces/components/ui';
+import type { ButtonProps } from '@/interfaces/components/ui';
 
-const SonnyButton: React.FC<SonnyButtonProps> = ({
+const Button: React.FC<ButtonProps> = ({
   title,
   onPress,
   variant = 'basic',
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   iconRight: { marginLeft: 8 },
 });
 
-export default SonnyButton;
+export default Button;

@@ -37,11 +37,11 @@ Weights: `regular` | `medium` | `semiBold` | `bold`
 ## Button
 
 ```tsx
-import SonnyButton from '@/components/ui/SonnyButton';
+import Button from '@/components/ui/Button';
 
-<SonnyButton title="Submit" onPress={() => {}} />
-<SonnyButton title="Cancel" onPress={() => {}} variant="outline" />
-<SonnyButton title="Save" onPress={save} iconName="save" iconPosition="left" loading={isLoading} />
+<Button title="Submit" onPress={() => {}} />
+<Button title="Cancel" onPress={() => {}} variant="outline" />
+<Button title="Save" onPress={save} iconName="save" iconPosition="left" loading={isLoading} />
 ```
 
 Variants: `basic` | `outline` | `custom`
@@ -49,24 +49,24 @@ Variants: `basic` | `outline` | `custom`
 ## Input
 
 ```tsx
-import SonnyInput from '@/components/ui/SonnyInput';
+import TextField from '@/components/ui/TextField';
 
-<SonnyInput
+<TextField
   label="Email"
   placeholder="Enter email"
   value={email}
   onChangeText={setEmail}
   keyboardType="email-address"
 />
-<SonnyInput label="Password" value={pw} onChangeText={setPw} secureTextEntry showPasswordToggle />
+<TextField label="Password" value={pw} onChangeText={setPw} secureTextEntry showPasswordToggle />
 ```
 
 ## Picker
 
 ```tsx
-import SonnyPicker from '@/components/ui/SonnyPicker';
+import Picker from '@/components/ui/Picker';
 
-<SonnyPicker
+<Picker
   label="Country"
   placeholder="Select"
   value={country}
@@ -78,15 +78,15 @@ import SonnyPicker from '@/components/ui/SonnyPicker';
 ## Toast
 
 ```tsx
-import { useSonnyToast, showSonnyToast } from '@/components/shared/SonnyToast';
+import { useToast, showToast } from '@/components/shared/Toast';
 
 // Hook (per-screen)
-const { showToast, ToastComponent } = useSonnyToast();
+const { showToast, ToastComponent } = useToast();
 showToast('Saved!', { type: 'success', title: 'Done', showIcon: true });
 return <><YourUI /><ToastComponent /></>;
 
-// Global (wrap app with SonnyToastProvider)
-showSonnyToast('Error', { type: 'error', title: 'Oops' });
+// Global (wrap app with ToastProvider)
+showToast('Error', { type: 'error', title: 'Oops' });
 ```
 
 Types: `success` | `error` | `warning` | `info`
@@ -94,18 +94,18 @@ Types: `success` | `error` | `warning` | `info`
 ## OTP Input
 
 ```tsx
-import SonnyOtpInput from '@/components/ui/SonnyOtpInput';
+import OtpInput from '@/components/ui/OtpInput';
 
-<SonnyOtpInput length={6} value={otp} onChangeText={setOtp} error={errorMsg} />
-<SonnyOtpInput length={6} value={otp} onChangeText={setOtp} circular />
+<OtpInput length={6} value={otp} onChangeText={setOtp} error={errorMsg} />
+<OtpInput length={6} value={otp} onChangeText={setOtp} circular />
 ```
 
 ## Image Picker
 
 ```tsx
-import SonnyImagePicker from '@/components/ui/SonnyImagePicker';
+import ImagePicker from '@/components/ui/ImagePicker';
 
-<SonnyImagePicker imageUri={uri} onPick={setUri} label="Photo" />
+<ImagePicker imageUri={uri} onPick={setUri} label="Photo" />
 ```
 
 ## Bottom Sheet (Form Sheet)
@@ -124,13 +124,13 @@ Uses [Expo Router form sheet](https://docs.expo.dev/router/advanced/modals/#form
 />
 
 // 2. Create app/(dash)/sheet.tsx:
-import SonnyBottomSheet from '@/components/ui/SonnyBottomSheet';
+import BottomSheet from '@/components/ui/BottomSheet';
 
 export default function SheetScreen() {
   return (
-    <SonnyBottomSheet title="Title">
+    <BottomSheet title="Title">
       <Text>Content</Text>
-    </SonnyBottomSheet>
+    </BottomSheet>
   );
 }
 

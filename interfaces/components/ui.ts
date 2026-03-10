@@ -1,8 +1,42 @@
+import type { ReactNode } from 'react';
+import type { Control, FieldError, RegisterOptions } from 'react-hook-form';
+import type { TextInputProps } from 'react-native';
 import { ViewStyle, TextStyle, ImageStyle } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import type { ImagePickerOptions } from 'expo-image-picker';
 
-export interface SonnyButtonProps {
+export interface BackArrowProps {
+  onPress?: () => void;
+  size?: number;
+  style?: ViewStyle;
+}
+
+export interface CollapsibleProps {
+  title: string;
+  children: ReactNode;
+}
+
+export interface DotsProps {
+  stepCount: number;
+  currentStep: number;
+  style?: ViewStyle;
+}
+
+export interface InputProps extends TextInputProps {
+  label?: string;
+  error?: FieldError | string;
+  control?: Control<any>;
+  name?: string;
+  rules?: RegisterOptions<any, any>;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
+  showAtSign?: boolean;
+  showValidationIcon?: boolean;
+  showPasswordToggle?: boolean;
+  containerStyle?: ViewStyle;
+}
+
+export interface ButtonProps {
   title: string;
   onPress: () => void;
   variant?: 'basic' | 'outline' | 'custom';
@@ -14,7 +48,7 @@ export interface SonnyButtonProps {
   iconPosition?: 'left' | 'right';
 }
 
-export interface SonnyInputProps {
+export interface TextFieldProps {
   label?: string;
   placeholder?: string;
   value: string;
@@ -32,7 +66,13 @@ export interface SonnyInputProps {
   errorStyle?: TextStyle;
 }
 
-export interface SonnyAuthStepsProps {
+export interface BottomSheetProps {
+  title?: string;
+  children: ReactNode;
+  style?: ViewStyle;
+}
+
+export interface StepsProps {
   currentStep: number;
   totalSteps: number;
   label?: string;
@@ -44,7 +84,7 @@ export interface SonnyAuthStepsProps {
   inactiveStepStyle?: ViewStyle;
 }
 
-export interface SonnyDocPickerProps {
+export interface DocPickerProps {
   title: string;
   frontLabel: string;
   backLabel?: string;
@@ -62,7 +102,7 @@ export interface SonnyDocPickerProps {
   cardHintStyle?: TextStyle;
 }
 
-export interface SonnyPickerProps {
+export interface PickerProps {
   label?: string;
   placeholder?: string;
   value: string;
@@ -82,7 +122,7 @@ export interface SonnyPickerProps {
   selectedItemStyle?: ViewStyle;
 }
 
-export interface SonnyOtpInputProps {
+export interface OtpInputProps {
   length?: number;
   value: string;
   onChangeText: (value: string) => void;
@@ -93,7 +133,7 @@ export interface SonnyOtpInputProps {
   errorStyle?: TextStyle;
 }
 
-export interface SonnyImagePickerProps {
+export interface ImagePickerProps {
   imageUri?: string | null;
   onPick: (uri: string) => void;
   onError?: (error: string) => void;

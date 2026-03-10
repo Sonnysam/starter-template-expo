@@ -2,14 +2,9 @@ import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
+import type { BottomSheetProps } from '@/interfaces/components/ui';
 
-interface SonnyBottomSheetProps {
-  title?: string;
-  children: React.ReactNode;
-  style?: ViewStyle;
-}
-
-const SonnyBottomSheet: React.FC<SonnyBottomSheetProps> = ({ title, children, style }) => {
+const BottomSheet: React.FC<BottomSheetProps> = ({ title, children, style }) => {
   const { colors } = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: colors.white }, style]}>
@@ -24,4 +19,4 @@ const styles = StyleSheet.create({
   title: { marginBottom: 16 },
 });
 
-export default SonnyBottomSheet;
+export default BottomSheet;

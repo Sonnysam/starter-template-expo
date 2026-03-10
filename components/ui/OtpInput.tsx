@@ -3,9 +3,9 @@ import { View, TextInput, TouchableOpacity, StyleSheet, Keyboard } from 'react-n
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
 import { Text } from '@/components/common/Text';
-import { SonnyOtpInputProps } from '@/interfaces/components/ui';
+import type { OtpInputProps } from '@/interfaces/components/ui';
 
-const SonnyOtpInput: React.FC<SonnyOtpInputProps> = ({
+const OtpInput: React.FC<OtpInputProps> = ({
   length = 6,
   value,
   onChangeText,
@@ -98,4 +98,4 @@ const SonnyOtpInput: React.FC<SonnyOtpInputProps> = ({
   );
 };
 
-export default SonnyOtpInput;
+export default OtpInput;

@@ -1,10 +1,10 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyDocPickerProps } from '@/interfaces/components/ui';
+import type { DocPickerProps } from '@/interfaces/components/ui';
 
 const DocCard: React.FC<{
   label: string;
@@ -53,7 +53,7 @@ const DocCard: React.FC<{
   </TouchableOpacity>
 );
 
-const SonnyDocPicker: React.FC<SonnyDocPickerProps> = ({
+const DocPicker: React.FC<DocPickerProps> = ({
   title,
   frontLabel,
   backLabel,
@@ -121,4 +121,4 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row' },
 });
 
-export default SonnyDocPicker;
+export default DocPicker;

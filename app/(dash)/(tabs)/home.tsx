@@ -3,10 +3,10 @@ import { StyleSheet, Switch, View } from 'react-native';
 import { router } from 'expo-router';
 import MainContainer from '@/components/common/MainContainer';
 import { Text } from '@/components/common/Text';
-import SonnyButton from '@/components/ui/SonnyButton';
-import SonnyInput from '@/components/ui/SonnyInput';
-import SonnyPicker from '@/components/ui/SonnyPicker';
-import SonnyAuthSteps from '@/components/ui/SonnyAuthSteps';
+import Button from '@/components/ui/Button';
+import TextField from '@/components/ui/TextField';
+import Picker from '@/components/ui/Picker';
+import Steps from '@/components/ui/Steps';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export default function Home() {
@@ -31,16 +31,16 @@ export default function Home() {
       <Text variant="title" weight="bold" style={styles.header}>
         Edit app/(dash)/(tabs)/home.tsx to get started
       </Text>
-      <SonnyAuthSteps currentStep={2} totalSteps={4} label="Progress" />
-      <SonnyInput label="Name" placeholder="Enter name" value={name} onChangeText={setName} />
-      <SonnyPicker
+      <Steps currentStep={2} totalSteps={4} label="Progress" />
+      <TextField label="Name" placeholder="Enter name" value={name} onChangeText={setName} />
+      <Picker
         label="Country"
         placeholder="Select"
         value={country}
         onValueChange={setCountry}
         items={['Ghana', 'Nigeria', 'Kenya', 'Togo', 'Benin']}
       />
-      <SonnyButton title="Open bottom sheet" onPress={() => router.push('/(dash)/sheet')} />
+      <Button title="Open bottom sheet" onPress={() => router.push('/(dash)/sheet')} />
     </MainContainer>
   );
 }

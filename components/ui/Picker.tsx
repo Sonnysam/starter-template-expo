@@ -4,9 +4,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyPickerProps } from '@/interfaces/components/ui';
+import type { PickerProps } from '@/interfaces/components/ui';
 
-const SonnyPicker: React.FC<SonnyPickerProps> = ({
+const Picker: React.FC<PickerProps> = ({
   label,
   placeholder = 'Select',
   value,
@@ -121,4 +121,4 @@ const SonnyPicker: React.FC<SonnyPickerProps> = ({
   );
 };
 
-export default SonnyPicker;
+export default Picker;

@@ -6,9 +6,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { Text } from '@/components/common/Text';
 import { useTheme } from '@/contexts/ThemeContext';
 import { FontSizes } from '@/constants/typography';
-import { SonnyImagePickerProps } from '@/interfaces/components/ui';
+import type { ImagePickerProps } from '@/interfaces/components/ui';
 
-const SonnyImagePicker: React.FC<SonnyImagePickerProps> = ({
+const ImagePickerComponent: React.FC<ImagePickerProps> = ({
   imageUri,
   onPick,
   onError,
@@ -81,4 +81,4 @@ const SonnyImagePicker: React.FC<SonnyImagePickerProps> = ({
   );
 };
 
-export default SonnyImagePicker;
+export default ImagePickerComponent;
