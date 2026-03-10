@@ -23,5 +23,11 @@ export const signUpSchema = z.object({
   path: ['confirmPassword'],
 });
 
+export const otpSchema = (length: number) =>
+  z
+    .string()
+    .length(length, `Enter ${length} digits`)
+    .regex(/^\d+$/, 'Only numbers allowed');
+
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type SignUpFormData = z.infer<typeof signUpSchema>;

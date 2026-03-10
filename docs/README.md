@@ -46,6 +46,18 @@ import Button from '@/components/ui/Button';
 
 Variants: `basic` | `outline` | `custom`
 
+## Link (External)
+
+```tsx
+import { Link } from '@/components/ui/Link';
+
+<Link href="https://github.com/username">
+  <Text>Open in browser</Text>
+</Link>
+```
+
+Opens external URLs in the system browser on native; uses `target="_blank"` on web.
+
 ## Input
 
 ```tsx
@@ -96,8 +108,20 @@ Types: `success` | `error` | `warning` | `info`
 ```tsx
 import OtpInput from '@/components/ui/OtpInput';
 
+// Standalone
 <OtpInput length={6} value={otp} onChangeText={setOtp} error={errorMsg} />
 <OtpInput length={6} value={otp} onChangeText={setOtp} circular />
+
+// With react-hook-form + zod
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod/v3';
+import { otpSchema } from '@/lib/validation';
+
+const schema = z.object({ code: otpSchema(6) });
+const { control } = useForm({ resolver: zodResolver(schema), defaultValues: { code: '' } });
+
+<OtpInput control={control} name="code" length={6} rules={{ required: 'Enter 6 digits' }} />
 ```
 
 ## Image Picker

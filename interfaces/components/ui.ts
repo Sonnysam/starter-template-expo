@@ -124,11 +124,16 @@ export interface PickerProps {
 
 export interface OtpInputProps {
   length?: number;
-  value: string;
-  onChangeText: (value: string) => void;
-  error?: string;
+  value?: string;
+  onChangeText?: (value: string) => void;
+  error?: FieldError | string;
+  control?: Control<any>;
+  name?: string;
+  rules?: RegisterOptions<any, any>;
+  autoFocus?: boolean;
   circular?: boolean;
   style?: ViewStyle;
+  boxStyle?: ViewStyle;
   inputStyle?: ViewStyle;
   errorStyle?: TextStyle;
 }

@@ -44,7 +44,7 @@ Use these guidelines when:
 | Routing, layouts, params | 14. Expo Router |
 | App Store / Play Store | 15. EAS Build |
 | Large bundle, tree shaking | 10. Project Conventions (barrel imports) |
-| API errors, structured parsing, 4xx vs 5xx | [api-error-handling.mdc](agent/api-error-handling.mdc) |
+| API errors, structured parsing, 4xx vs 5xx | [api-error-handling.mdc](skills/api-error-handling.mdc) |
 | Zustand + React Query boundaries | 1a. Zustand & React Query |
 
 ---
@@ -165,7 +165,7 @@ services/
   auth.service.ts  # Auth-related API calls
 ```
 
-**Base client** – Single place for base URL, auth, error handling. For structured API error parsing (ApiError, validation details), see [api-error-handling.mdc](agent/api-error-handling.mdc).
+**Base client** – Single place for base URL, auth, error handling. For structured API error parsing (ApiError, validation details), see [api-error-handling.mdc](skills/api-error-handling.mdc).
 
 ```typescript
 // services/api/client.ts
@@ -318,7 +318,7 @@ const fullName = `${first} ${last}`;
 - **Error boundaries** – Wrap major sections.
 - **User-facing errors** – Generic messages (e.g. "Something went wrong."). Never expose stack traces.
 - **Async errors** – Use `try/catch` and proper error types.
-- **API errors** – For structured backend errors (ApiError, 4xx vs 5xx, validation details), see [api-error-handling.mdc](agent/api-error-handling.mdc).
+- **API errors** – For structured backend errors (ApiError, 4xx vs 5xx, validation details), see [api-error-handling.mdc](skills/api-error-handling.mdc).
 
 ---
 

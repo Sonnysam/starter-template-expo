@@ -8,7 +8,7 @@ A React Native starter built with Expo, reusable UI components, and a structured
 - **Native Tabs** – iOS (SF Symbols) and Android (Material icons) via `expo-router/unstable-native-tabs`; web uses JS fallback
 - **Form Sheet Bottom Sheet** – Native bottom sheet with detents via [Expo Router modals](https://docs.expo.dev/router/advanced/modals/#form-sheet-presentation)
 - **Typography System** – `constants/typography.ts` (FontSizes, FontWeights, LineHeights); `constants/fonts.ts` (Poppins)
-- **Custom UI Components** – Button, Input, Picker, OTP, Image Picker, Doc Picker, Toast, Auth Steps, Bottom Sheet
+- **Custom UI Components** – Button, TextField, Picker, OTP, Image Picker, Doc Picker, Toast, Steps, Bottom Sheet, Link
 - **TypeScript** – Full type safety
 - **Zustand** – Lightweight state management
 - **NativeWind** – Tailwind CSS for React Native
@@ -66,12 +66,13 @@ starter-app/
 ├── components/
 │   ├── common/          # MainContainer, Text
 │   ├── shared/          # Toast
-│   └── ui/              # Button, TextField, Picker, OtpInput, ImagePicker, DocPicker, Steps, BottomSheet
+│   └── ui/              # Button, TextField, Picker, OtpInput, ImagePicker, DocPicker, Steps, BottomSheet, Link
 ├── constants/
 │   ├── colors.ts
 │   ├── fonts.ts         # Poppins fonts
 │   ├── typography.ts    # FontSizes, FontWeights, LineHeights
 │   └── tabs.ts         # Tab config (sf/md icons)
+├── skills/              # AI skills (rules, React Native Expo core, API error handling)
 ├── docs/                # Usage examples
 │   ├── README.md        # Simple copy-paste snippets
 │   ├── component-examples.tsx

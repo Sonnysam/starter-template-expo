@@ -7,7 +7,7 @@ alwaysApply: false
 
 Client-side guide for handling standardized API errors from the backend in React Native Expo apps. Use when implementing the API client, TanStack Query mutations, forms (react-hook-form), auth flows, or error UIs.
 
-**Syncs with:** [react-native-expo-core.mdc](agent/react-native-expo-core.mdc) Section 2 (API Layer) and Section 7 (Error Handling); [rules.md](agent/rules.md) Section 9 (Backend & Services). This guide extends the base client's `throw new Error(...)` in Section 2 with structured `ApiError` parsing and replaces generic `toast.error(err.message)` in mutation `onError` with 4xx vs 5xx handling.
+**Syncs with:** [react-native-expo-core.mdc](skills/react-native-expo-core.mdc) Section 2 (API Layer) and Section 7 (Error Handling); [rules.md](skills/rules.md) Section 9 (Backend & Services). This guide extends the base client's `throw new Error(...)` in Section 2 with structured `ApiError` parsing and replaces generic `toast.error(err.message)` in mutation `onError` with 4xx vs 5xx handling.
 
 **When to apply:** API client setup, TanStack Query `onError` handling, form validation from API, auth redirects (Expo Router), toast/error UI.
 
